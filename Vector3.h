@@ -11,7 +11,7 @@ public:
 
 public:
 
-	Vector3() : values{ 0, 0, 0 } {};
+	Vector3() : values{ 0, 0, 0 } {}
 	Vector3(double v1, double v2, double v3) : values{ v1, v2, v3 } {}
 
 	double x() { return values[0]; }
@@ -107,9 +107,9 @@ inline Vector3 operator*(const double val, const Vector3& vec)
 	return vec * val;
 }
 
-inline Vector3 operator/(const Vector3& vec, const double t)
+inline Vector3 operator/(const Vector3& vec, const double val)
 {
-	return vec * 1 / t;
+	return vec * (1 / val);
 }
 
 
