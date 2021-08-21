@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Color.h"
+#include "Camera.h"
 #include "HittableList.h"
 #include "Sphere.h"
 
@@ -31,6 +32,7 @@ int main()
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
+    const int samples_per_pixel = 100;
 
     // WORLD
 
@@ -39,24 +41,8 @@ int main()
     world.Add(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     // CAMERA
-    // The “eye” is placed at (0,0,0). The y-axis goes up and the x-axis to the right.
-    // In order to respect the convention of a right handed coordinate system, 
-    // into the screen is the negative z-axis.
-    // The distance between the projection plane and the eye is set to one unit (“focal length”).
 
-    // Viewport vertical coordinates span from -1.0 (bottom) to 1.0 (top), 
-    // while the horizontal coordinates are still symmetrical -X (left) to X (right)
-    // but the exact values are computed based on the aspect ration, to keep standard
-    // square pixel spacing.
-
-    double viewport_height = 2.0;
-    double viewport_width = aspect_ratio * viewport_height;
-    double focal_length = 1.0f;
-
-    Point3 origin = Point3(0, 0, 0);
-    Vector3 horizontal = Vector3(viewport_width, 0, 0);
-    Vector3 vertical = Vector3(0, viewport_height, 0);
-    Vector3 lower_left_corner = origin - horizontal / 2 - vertical / 2 - Vector3(0, 0, focal_length);
+    Camera camera = Camera(aspect_ratio);
 
     // RENDER PPM IMAGE
 
@@ -69,11 +55,17 @@ int main()
         std::cerr << "\rRendering scanline " << (image_height - j) << '/' << image_height;
         for (int i = 0; i < image_width; i++)
         {
-            double u = double(i) / (image_width - 1);
-            double v = double(j) / (image_height - 1);
-            Ray ray = Ray(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-            Color pixel = RayColor(ray, world);
-            WriteColor(std::cout, pixel);
+            // Gather multiple samples per pixel, and accumulate them.
+            Color pixel = Color(0, 0, 0);
+            for (int s = 0; s < samples_per_pixel; s++)
+            {
+                double u = (i + RandomDouble(0.0, 1.0)) / (image_width - 1);
+                double v = (j + RandomDouble(0.0, 1.0)) / (image_height - 1);
+
+                pixel += RayColor(camera.GetRay(u, v), world);
+            }
+            // Average the collected samples when writing the final colored pixel.
+            WriteColor(std::cout, pixel, samples_per_pixel);
         }
         std::cout << '\n';
     }
