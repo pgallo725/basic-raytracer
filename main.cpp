@@ -5,9 +5,27 @@
 #include "Ray.h"
 
 
+bool HitSphere(const Point3& center, const double radius, const Ray& ray)
+{
+    // Check if there exists any 't' that defines a point P which satisfies
+    // the equation (Px - Cx)^2 + (Py - Cy)^2 + (Pz - Cz)^2 = r^2,
+    // rewritten as ((A + t * b) - C).((A + t * b) - C) - r^2 = 0,
+    // which defines a point on the sphere's surface (an intersection)
+    Vector3 oc = ray.origin - center;
+    double a = Vector3::Dot(ray.direction, ray.direction);
+    double b = 2.0 * Vector3::Dot(oc, ray.direction);
+    double c = Vector3::Dot(oc, oc) - radius * radius;
+    double discriminant = b * b - 4 * a * c;
+    return (discriminant > 0);
+}
+
 Color RayColor(const Ray& r)
 {
-    // A blue-to-white gradient depending on ray Y coordinate.
+    // A red sphere.
+    if (HitSphere(Point3(0, 0, -1), 0.5, r))
+        return Color(1.0, 0.0, 0.0);
+
+    // A blue-to-white gradient depending on ray Y coordinate as background.
     Vector3 unit_dir = Vector3::Normalized(r.direction);
     auto t = 0.5 * (unit_dir.y() + 1.0);
     return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
