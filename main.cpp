@@ -1,33 +1,25 @@
+#include "Common.h"
+
 #include <iostream>
 
-#include "Vector3.h"
 #include "Color.h"
-#include "Ray.h"
+#include "HittableList.h"
+#include "Sphere.h"
 
 
-bool HitSphere(const Point3& center, const double radius, const Ray& ray)
+Color RayColor(const Ray& ray, const Hittable& world)
 {
-    // Check if there exists any 't' that defines a point P which satisfies
-    // the equation (Px - Cx)^2 + (Py - Cy)^2 + (Pz - Cz)^2 = r^2,
-    // rewritten as ((A + t * b) - C).((A + t * b) - C) - r^2 = 0,
-    // which defines a point on the sphere's surface (an intersection)
-    Vector3 oc = ray.origin - center;
-    double a = Vector3::Dot(ray.direction, ray.direction);
-    double b = 2.0 * Vector3::Dot(oc, ray.direction);
-    double c = Vector3::Dot(oc, oc) - radius * radius;
-    double discriminant = b * b - 4 * a * c;
-    return (discriminant > 0);
-}
-
-Color RayColor(const Ray& r)
-{
-    // A red sphere.
-    if (HitSphere(Point3(0, 0, -1), 0.5, r))
-        return Color(1.0, 0.0, 0.0);
+    // Intersect the ray against the world geometry.
+    HitRecord hit;
+    if (world.Hit(ray, 0.0, Infinity, hit))
+    {
+        // Unit normals have components in [-1, 1], map them to [0, 1] color space
+        return 0.5 * Color(hit.normal + Vector3(1, 1, 1));
+    }
 
     // A blue-to-white gradient depending on ray Y coordinate as background.
-    Vector3 unit_dir = Vector3::Normalized(r.direction);
-    auto t = 0.5 * (unit_dir.y() + 1.0);
+    Vector3 unit_dir = Vector3::Normalized(ray.direction);
+    double t = 0.5 * (unit_dir.y() + 1.0);
     return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
@@ -39,6 +31,12 @@ int main()
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
+
+    // WORLD
+
+    HittableList world = HittableList();
+    world.Add(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5));
+    world.Add(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     // CAMERA
     // The “eye” is placed at (0,0,0). The y-axis goes up and the x-axis to the right.
@@ -74,7 +72,7 @@ int main()
             double u = double(i) / (image_width - 1);
             double v = double(j) / (image_height - 1);
             Ray ray = Ray(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-            Color pixel = RayColor(ray);
+            Color pixel = RayColor(ray, world);
             WriteColor(std::cout, pixel);
         }
         std::cout << '\n';

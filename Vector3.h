@@ -18,7 +18,7 @@ public:
 	double y() { return values[1]; }
 	double z() { return values[2]; }
 
-	Vector3 operator-() { return Vector3(-values[0], -values[1], -values[2]); }
+	Vector3 operator-() const { return Vector3(-values[0], -values[1], -values[2]); }
 	double operator[](int i) const { return values[i]; }
 	double& operator[](int i) { return values[i]; }
 
