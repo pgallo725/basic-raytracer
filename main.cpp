@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include "Vector3.h"
+#include "Color.h"
+
 int main()
 {
     // Image size
@@ -16,15 +19,8 @@ int main()
         std::cerr << "\rRendering scanline " << (image_height - j) << '/' << image_height;
         for (int i = 0; i < image_width; i++)
         {
-            double r = double(i) / (image_width - 1);
-            double g = double(j) / (image_height - 1);
-            double b = 0.25;
-
-            int ir = static_cast<int>(r * 255.999);
-            int ig = static_cast<int>(g * 255.999);
-            int ib = static_cast<int>(b * 255.999);
-
-            std::cout << ir << ' ' << ig << ' ' << ib << ' ';
+            Color pixel = Color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0.25);
+            WriteColor(std::cout, pixel);
         }
         std::cout << '\n';
     }
