@@ -1,4 +1,5 @@
 #include "Vector3.h"
+#include "Common.h"
 
 
 Vector3 Vector3::operator-() const
@@ -129,4 +130,53 @@ Vector3 Vector3::Refract(const Vector3& vec, const Vector3& normal, double etai_
 	Vector3 r_parallel = -std::sqrt(fabs(1.0 - r_perpendicular.SqrLength())) * normal;
 
 	return r_parallel + r_perpendicular;
+}
+
+
+Vector3 Vector3::Random(double min, double max)
+{
+	return Vector3(RandomDouble(min, max),
+		RandomDouble(min, max),
+		RandomDouble(min, max));
+}
+
+Vector3 Vector3::RandomUnit()
+{
+	/*double rand_theta = RandomDouble(0.0, PI);
+	double rand_psi = RandomDouble(0.0, 2 * PI);
+
+	return Vector3(std::cos(rand_psi) * std::sin(rand_theta),
+		std::sin(rand_psi) * std::sin(rand_theta),
+		std::cos(rand_theta));*/
+
+	return Vector3::Normalized(RandomInUnitSphere());
+}
+
+Vector3 Vector3::RandomInUnitSphere()
+{
+	while (true)
+	{
+		// Pick a random point in the unit cube, where x, y, and z in [-1, +1].
+		Vector3 p = Vector3::Random(-1, 1);
+		// Reject this point and try again if the point is outside the sphere.
+		if (p.SqrLength() >= 1) continue;
+		return p;
+	}
+}
+
+Vector3 Vector3::RandomInHemisphere(const Vector3& normal)
+{
+	Vector3 in_unit_sphere = Vector3::RandomInUnitSphere();
+	return Vector3::Dot(in_unit_sphere, normal) > 0.0 ?     // In the same hemisphere as the normal
+		in_unit_sphere : -in_unit_sphere;
+}
+
+Vector3 Vector3::RandomInUnitDisk()
+{
+	while (true) {
+		Vector3 p = Vector3(RandomDouble(-1, 1), RandomDouble(-1, 1), 0);
+		if (p.SqrLength() >= 1.0) continue;
+		return p;
+	}
+	
 }

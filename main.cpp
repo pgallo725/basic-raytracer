@@ -63,7 +63,13 @@ int main()
 
     // CAMERA
 
-    Camera camera(Point3(-2, 2, 1), Point3(0, 0, -1), Vector3(0, 1, 0), 90.0, aspect_ratio);
+    Point3 look_from(3, 3, 2);
+    Point3 look_at(0, 0, -1);
+    Vector3 view_up(0, 1, 0);
+    auto dist_to_focus = (look_from - look_at).Length();
+    auto aperture = 2.0;
+
+    Camera camera(look_from, look_at, view_up, 20, aspect_ratio, aperture, dist_to_focus);
 
     // RENDER PPM IMAGE
 

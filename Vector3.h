@@ -46,6 +46,12 @@ public:
 
 	static Vector3 Reflect(const Vector3& vec, const Vector3& normal);
 	static Vector3 Refract(const Vector3& vec, const Vector3& normal, double etai_over_etat);
+
+	static Vector3 Random(double min, double max);
+	static Vector3 RandomUnit();
+	static Vector3 RandomInUnitSphere();
+	static Vector3 RandomInHemisphere(const Vector3& normal);
+	static Vector3 RandomInUnitDisk();
 };
 
 

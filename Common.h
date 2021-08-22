@@ -37,44 +37,6 @@ inline double RandomDouble(double min, double max)
     return distribution(generator);
 }
 
-inline Vector3 RandomVector(double min, double max)
-{
-    return Vector3(RandomDouble(min, max),
-        RandomDouble(min, max),
-        RandomDouble(min, max));
-}
-
-inline Vector3 RandomInUnitSphere()
-{
-    while (true) 
-    {
-        // Pick a random point in the unit cube, where x, y, and z in [-1, +1].
-        Vector3 p = RandomVector(-1, 1);
-        // Reject this point and try again if the point is outside the sphere.
-        if (p.SqrLength() >= 1) continue;
-        return p;
-    }
-}
-
-inline Vector3 RandomInHemisphere(const Vector3& normal)
-{
-    Vector3 in_unit_sphere = RandomInUnitSphere();
-    return Vector3::Dot(in_unit_sphere, normal) > 0.0 ?     // In the same hemisphere as the normal
-        in_unit_sphere : -in_unit_sphere;
-}
-
-inline Vector3 RandomUnitVector()
-{
-    /*double rand_theta = RandomDouble(0.0, PI);
-    double rand_psi = RandomDouble(0.0, 2 * PI);
-
-    return Vector3(std::cos(rand_psi) * std::sin(rand_theta),
-        std::sin(rand_psi) * std::sin(rand_theta),
-        std::cos(rand_theta));*/
-
-    return Vector3::Normalized(RandomInUnitSphere());
-}
-
 inline double Clamp(double x, double min, double max) 
 {
     if (x < min) return min;
