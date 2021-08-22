@@ -8,14 +8,22 @@
 #include "Sphere.h"
 
 
-Color RayColor(const Ray& ray, const Hittable& world)
+Color RayColor(const Ray& ray, const Hittable& world, int bounces_left)
 {
-    // Intersect the ray against the world geometry.
     HitRecord hit;
-    if (world.Hit(ray, 0.0, Infinity, hit))
+
+    // If we've exceeded the ray bounce limit, no more light is gathered.
+    if (bounces_left <= 0)
+        return Color(0.0, 0.0, 0.0);
+
+    // Intersect the ray against the world geometry.
+    if (world.Hit(ray, 0.001, Infinity, hit))
     {
-        // Unit normals have components in [-1, 1], map them to [0, 1] color space
-        return 0.5 * Color(hit.normal + Vector3(1, 1, 1));
+        // Bounce the ray in a random direction off the surface (offset by the face normal).
+        Point3 target = hit.point + hit.normal + RandomUnitVector();
+
+        // Surfaces absorb half the energy at each bounce.
+        return 0.5 * RayColor(Ray(hit.point, target - hit.point), world, bounces_left - 1);
     }
 
     // A blue-to-white gradient depending on ray Y coordinate as background.
@@ -33,6 +41,7 @@ int main()
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
+    const int max_bounces = 50;
 
     // WORLD
 
@@ -62,7 +71,7 @@ int main()
                 double u = (i + RandomDouble(0.0, 1.0)) / (image_width - 1);
                 double v = (j + RandomDouble(0.0, 1.0)) / (image_height - 1);
 
-                pixel += RayColor(camera.GetRay(u, v), world);
+                pixel += RayColor(camera.GetRay(u, v), world, max_bounces);
             }
             // Average the collected samples when writing the final colored pixel.
             WriteColor(std::cout, pixel, samples_per_pixel);
