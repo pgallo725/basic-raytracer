@@ -9,11 +9,13 @@ public:
 
     Point3 center;
     double radius;
+    std::shared_ptr<Material> material;
 
 public:
 
     Sphere() : center(), radius(0.0) {}
-    Sphere(Point3 center, double radius) : center(center), radius(radius) {}
+    Sphere(Point3 center, double radius, std::shared_ptr<Material> material)
+        : center(center), radius(radius), material(material) {}
 
     virtual bool Hit(const Ray& ray, double t_min, double t_max, HitRecord& hit) const override;
 };
@@ -47,6 +49,7 @@ bool Sphere::Hit(const Ray& ray, double t_min, double t_max, HitRecord& hit) con
     hit.point = ray.At(hit.t);
     Vector3 outward_normal = (hit.point - center) / radius;
     hit.SetFaceNormal(ray, outward_normal);
+    hit.material = material;
 
     return true;
 }

@@ -2,6 +2,8 @@
 
 #include "Ray.h"
 
+class Material;		// Forward declaration
+
 
 // Contains the information about a ray-object intersection
 struct HitRecord
@@ -10,6 +12,7 @@ struct HitRecord
 	Vector3 normal;
 	double t;
 	bool front_face;
+	std::shared_ptr<Material> material;
 
 	inline void SetFaceNormal(const Ray& ray, const Vector3& outward_normal)
 	{

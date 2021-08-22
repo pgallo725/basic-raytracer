@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "HittableList.h"
 #include "Sphere.h"
+#include "Material.h"
 
 
 Color RayColor(const Ray& ray, const Hittable& world, int bounces_left)
@@ -19,11 +20,13 @@ Color RayColor(const Ray& ray, const Hittable& world, int bounces_left)
     // Intersect the ray against the world geometry.
     if (world.Hit(ray, 0.001, Infinity, hit))
     {
-        // Bounce the ray in a random direction off the surface (offset by the face normal).
-        Point3 target = hit.point + hit.normal + RandomUnitVector();
+        Ray scattered;
+        Color attenuation;
 
-        // Surfaces absorb half the energy at each bounce.
-        return 0.5 * RayColor(Ray(hit.point, target - hit.point), world, bounces_left - 1);
+        // Scatter the ray against the surface (based on material properties)
+        if (hit.material->Scatter(ray, hit, attenuation, scattered))
+            return attenuation * RayColor(scattered, world, bounces_left - 1);
+        else return Color(0.0, 0.0, 0.0);
     }
 
     // A blue-to-white gradient depending on ray Y coordinate as background.
@@ -46,8 +49,16 @@ int main()
     // WORLD
 
     HittableList world = HittableList();
-    world.Add(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5));
-    world.Add(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100));
+
+    auto material_ground = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
+    auto material_center = std::make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
+    auto material_left = std::make_shared<Dielectric>(1.5);
+    auto material_right = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.0);
+
+    world.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    world.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5, material_center));
+    world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
+    world.Add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     // CAMERA
 
