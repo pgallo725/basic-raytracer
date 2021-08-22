@@ -48,7 +48,7 @@ int main()
 
     // WORLD
 
-    HittableList world = HittableList();
+    HittableList world;
 
     auto material_ground = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
     auto material_center = std::make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
@@ -58,11 +58,12 @@ int main()
     world.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
     world.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5, material_center));
     world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
+    world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), -0.45, material_left));
     world.Add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     // CAMERA
 
-    Camera camera = Camera(aspect_ratio);
+    Camera camera(Point3(-2, 2, 1), Point3(0, 0, -1), Vector3(0, 1, 0), 90.0, aspect_ratio);
 
     // RENDER PPM IMAGE
 

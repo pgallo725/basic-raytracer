@@ -13,30 +13,44 @@ private:
 
 public:
 
-	Camera(double aspect_ratio)
+	Camera(Point3 lookFrom,
+        Point3 lookAt, 
+        Vector3 view_up,
+        double v_fov,        // vertical field-of-view in degrees
+        double aspect_ratio)
 	{
-        // Viewport vertical coordinates span from -1.0 (bottom) to 1.0 (top), 
+        // The height of the viewport can be calculated from the FOV
+        // using simple trigonometry formulas.
+        double theta = Deg2Rad(v_fov);
+        double h = std::tan(theta / 2);
+
+        // Viewport vertical coordinates span from -tan(theta/2) (bottom) to tan(theta/2) (top), 
         // while the horizontal coordinates are still symmetrical -X (left) to X (right)
         // but the exact values are computed based on the aspect ration, to keep standard
         // square pixel spacing.
 
-        double viewport_height = 2.0;
+        double viewport_height = 2.0 * h;
         double viewport_width = aspect_ratio * viewport_height;
-        double focal_length = 1.0f;
 
-        // The “eye” is placed at (0,0,0). The y-axis goes up and the x-axis to the right.
-        // In order to respect the convention of a right handed coordinate system, 
-        // into the screen is the negative z-axis.
-        // The distance between the projection plane and the eye is set to one unit (“focal length”).
+        // Derive a view direction from the 2 points lookFrom and lookAt
+        Vector3 w = Vector3::Normalized(lookFrom - lookAt);
+        // Then, using the provided world up vector, derive the right direction
+        Vector3 u = Vector3::Normalized(Vector3::Cross(view_up, w));
+        // Finally, complete the orthonormal basis by computing the actual view up vector
+        Vector3 v = Vector3::Cross(w, u);
 
-        origin = Point3(0, 0, 0);
-        horizontal = Vector3(viewport_width, 0, 0);
-        vertical = Vector3(0, viewport_height, 0);
-        lower_left_corner = origin - horizontal / 2 - vertical / 2 - Vector3(0, 0, focal_length);
+        // The “eye” is placed at the provided lookFrom point. 
+        // The distance between the projection plane and the eye is set to one unit (“focal length”)
+        // along the view direction (-w, for convention).
+
+        origin = lookFrom;
+        horizontal = viewport_width * u;
+        vertical = viewport_height * v;
+        lower_left_corner = origin - horizontal / 2 - vertical / 2 - w;
 	}
 
-    Ray GetRay(double u, double v) const
+    Ray GetRay(double s, double t) const
     {
-        return Ray(origin, lower_left_corner + u * horizontal + v * vertical - origin);
+        return Ray(origin, lower_left_corner + s * horizontal + t * vertical - origin);
     }
 };
