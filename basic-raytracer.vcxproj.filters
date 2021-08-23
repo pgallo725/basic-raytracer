@@ -26,9 +26,6 @@
     <ClInclude Include="Vector3.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="Ray.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
@@ -48,6 +45,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

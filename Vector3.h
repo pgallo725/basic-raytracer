@@ -15,9 +15,9 @@ public:
 	Vector3() : values{ 0, 0, 0 } {}
 	Vector3(double v1, double v2, double v3) : values{ v1, v2, v3 } {}
 
-	inline double x() { return values[0]; }
-	inline double y() { return values[1]; }
-	inline double z() { return values[2]; }
+	inline double x() const { return values[0]; }
+	inline double y() const { return values[1]; }
+	inline double z() const { return values[2]; }
 
 	inline double operator[](int i) const { return values[i]; }
 	inline double& operator[](int i) { return values[i]; }

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Color.h"
+#include "Image.h"
 #include "Camera.h"
 #include "HittableList.h"
 #include "Sphere.h"
@@ -116,15 +116,15 @@ int main()
 
     Camera camera(look_from, look_at, view_up, 20, aspect_ratio, aperture, dist_to_focus);
 
-    // RENDER PPM IMAGE
+    // RENDER IMAGE
 
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    std::ofstream image = Image::Create("render.ppm", image_width, image_height, 255);
 
     // Traverse the screen from the upper left hand corner, along left-to-right scan lines,
     // and cast a ray from the "eye" to each pixel in the viewport, to compute its color.
     for (int j = image_height - 1; j >= 0; j--)
     {
-        std::cerr << "\rRendering scanline " << (image_height - j) << '/' << image_height;
+        std::cout << "\rRendering scanline " << (image_height - j) << '/' << image_height;
         for (int i = 0; i < image_width; i++)
         {
             // Gather multiple samples per pixel, and accumulate them.
@@ -136,10 +136,14 @@ int main()
 
                 pixel += RayColor(camera.GetRay(u, v), world, max_bounces);
             }
-            // Average the collected samples when writing the final colored pixel.
-            WriteColor(std::cout, pixel, samples_per_pixel);
+
+            // Average the collected samples before writing the final colored pixel.
+            pixel /= samples_per_pixel;
+
+            Image::WritePixel(image, pixel);
         }
-        std::cout << '\n';
     }
-    std::cerr << "\nDone!\n";
+
+    Image::Close(image);
+    std::cout << "\nDone!\n";
 }
