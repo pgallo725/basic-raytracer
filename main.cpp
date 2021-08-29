@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 #include "Common.h"
 #include "Image.h"
@@ -92,6 +93,8 @@ int main()
 
     // RENDER IMAGE
 
+    auto start_time = std::chrono::steady_clock::now();
+
     std::ofstream image = Image::Create("render.ppm", image_width, image_height, 255);
 
     std::vector<std::unique_ptr<RenderThread>> render_threads;
@@ -138,5 +141,9 @@ int main()
         thread->Join();
 
     Image::Close(image);
-    std::cout << "\nDone!\n";
+
+    auto end_time = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+
+    std::cout << "\nDone! (" << (duration / 1000.0) << "s)\n";
 }
