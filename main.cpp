@@ -1,12 +1,12 @@
-#include "Common.h"
-
 #include <iostream>
 
+#include "Common.h"
 #include "Image.h"
 #include "Camera.h"
 #include "HittableList.h"
 #include "Sphere.h"
 #include "Material.h"
+#include "RenderThread.h"
 
 
 HittableList RandomScene() 
@@ -65,33 +65,6 @@ HittableList RandomScene()
 }
 
 
-Color RayColor(const Ray& ray, const Hittable& world, int bounces_left)
-{
-    HitRecord hit;
-
-    // If we've exceeded the ray bounce limit, no more light is gathered.
-    if (bounces_left <= 0)
-        return Color(0.0, 0.0, 0.0);
-
-    // Intersect the ray against the world geometry.
-    if (world.Hit(ray, 0.001, Infinity, hit))
-    {
-        Ray scattered;
-        Color attenuation;
-
-        // Scatter the ray against the surface (based on material properties)
-        if (hit.material->Scatter(ray, hit, attenuation, scattered))
-            return attenuation * RayColor(scattered, world, bounces_left - 1);
-        else return Color(0.0, 0.0, 0.0);
-    }
-
-    // A blue-to-white gradient depending on ray Y coordinate as background.
-    Vector3 unit_dir = Vector3::Normalized(ray.direction);
-    double t = 0.5 * (unit_dir.y() + 1.0);
-    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
-}
-
-
 int main()
 {
     // IMAGE PROPERTIES
@@ -101,6 +74,7 @@ int main()
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 500;
     const int max_bounces = 50;
+    const int thread_count = 6;
 
     // WORLD
 
@@ -120,29 +94,48 @@ int main()
 
     std::ofstream image = Image::Create("render.ppm", image_width, image_height, 255);
 
-    // Traverse the screen from the upper left hand corner, along left-to-right scan lines,
-    // and cast a ray from the "eye" to each pixel in the viewport, to compute its color.
+    std::vector<std::unique_ptr<RenderThread>> render_threads;
+    for (int i = 0; i < thread_count; i++)
+    {
+        // Calculate the number of samples that each render thread will compute.
+        int sample_count = int(samples_per_pixel / thread_count);
+        if (i < samples_per_pixel % thread_count) sample_count++;
+
+        render_threads.emplace_back(std::make_unique<RenderThread>(
+            world, camera, image_width, image_height, sample_count, max_bounces));
+    }
+
+    // Run a batch of render threads in parallel, each one rendering a subset of samples
+    // of the entire image, and then combine their results together.
     for (int j = image_height - 1; j >= 0; j--)
     {
         std::cout << "\rRendering scanline " << (image_height - j) << '/' << image_height;
+
+        // Start the rendering loop for the current scanline on all threads.
+        for (auto& thread : render_threads)
+            thread->BeginRender();
+
+        // Wait for all threads to complete their rendering job.
+        for (auto& thread : render_threads)
+            thread->WaitRender();
+
         for (int i = 0; i < image_width; i++)
         {
-            // Gather multiple samples per pixel, and accumulate them.
-            Color pixel = Color(0, 0, 0);
-            for (int s = 0; s < samples_per_pixel; s++)
-            {
-                double u = (i + RandomDouble(0.0, 1.0)) / (image_width - 1);
-                double v = (j + RandomDouble(0.0, 1.0)) / (image_height - 1);
+            // Accumulate the samples collected by all render threads.
+            Color pixel(0, 0, 0);
+            for (int t = 0; t < thread_count; t++)
+                pixel += render_threads[t]->pixels[i];
 
-                pixel += RayColor(camera.GetRay(u, v), world, max_bounces);
-            }
-
-            // Average the collected samples before writing the final colored pixel.
-            pixel /= samples_per_pixel;
+            // Average samples to get the value of the final output pixel.
+            pixel /= thread_count;
 
             Image::WritePixel(image, pixel);
         }
     }
+
+    // Join all render threads to avoid zombies.
+    for (auto& thread : render_threads)
+        thread->Join();
 
     Image::Close(image);
     std::cout << "\nDone!\n";
