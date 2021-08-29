@@ -50,5 +50,8 @@
     <ClInclude Include="Image.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="RenderThread.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
