@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <random>
+#include <chrono>
 
 
 // Common Headers
@@ -31,10 +32,12 @@ inline double Rad2Deg(double radians)
     return radians * 180.0 / PI;
 }
 
-inline double RandomDouble(double min, double max) 
+inline double RandomDouble(double min, double max)
 {
-    static std::uniform_real_distribution<double> distribution(min, max);
-    static std::mt19937 generator;
+    static thread_local auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    static thread_local std::mt19937_64 generator = std::mt19937_64(seed);
+
+    std::uniform_real_distribution<double> distribution(min, max);
     return distribution(generator);
 }
 
