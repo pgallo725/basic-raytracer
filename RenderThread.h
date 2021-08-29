@@ -29,12 +29,15 @@ private:
 
 public:
 
-	RenderThread(const HittableList& scene, const Camera& camera, const int width, const int height, const int samples, const int bounces)
+	RenderThread(const int thread_id, const HittableList& scene, const Camera& camera,
+        const int width, const int height, const int samples, const int bounces)
 		: m_renderSemaphore(1), m_resultSemaphore(0), 
         ref_scene(scene), ref_camera(camera),
         m_width(width), m_height(height), m_samples(samples), m_maxBounces(bounces)
 	{
         pixels = new Color[m_width];
+
+        Random::SeedCurrentThread(thread_id);
         m_thread = std::thread(&RenderThread::RenderLoop, this);
 	}
 
@@ -43,17 +46,17 @@ public:
         delete[] pixels;
     }
 
-    void BeginRender()
+    inline void BeginRender()
     {
         m_renderSemaphore.release();
     }
 
-    void WaitRender()
+    inline void WaitRender()
     {
         m_resultSemaphore.acquire();
     }
 
-    void Join()
+    inline void Join()
     {
         if (m_thread.joinable())
             m_thread.join();
@@ -74,8 +77,8 @@ private:
                 Color pixel = Color(0, 0, 0);
                 for (int s = 0; s < m_samples; s++)
                 {
-                    double u = (i + RandomDouble(0.0, 1.0)) / (m_width - 1);
-                    double v = (j + RandomDouble(0.0, 1.0)) / (m_height - 1);
+                    double u = (i + Random::GetDouble(0.0, 1.0)) / (m_width - 1);
+                    double v = (j + Random::GetDouble(0.0, 1.0)) / (m_height - 1);
 
                     pixel += RayColor(ref_camera.GetRay(u, v), ref_scene, m_maxBounces);
                 }

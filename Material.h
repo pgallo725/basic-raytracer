@@ -29,7 +29,7 @@ public:
 	{
 		// Scatter the incoming ray in a random direction off the surface
 		// (offset by the face normal to avoid rays going inside the surface).
-		Vector3 scatter_direction = hit.normal + Vector3::RandomUnit();
+		Vector3 scatter_direction = hit.normal + Random::GetUnitVector();
 
 		// Catch potentially degenerate scatter direction.
 		if (scatter_direction.NearZero())
@@ -60,7 +60,7 @@ public:
 		Vector3 unit_direction = Vector3::Normalized(ray_in.direction);
 		Vector3 reflected = Vector3::Reflect(unit_direction, hit.normal);
 		// Adding fuzziness to the reflected ray by slightly changing the ray direction.
-		ray_scattered = Ray(hit.point, reflected + fuzz * Vector3::RandomInUnitSphere());
+		ray_scattered = Ray(hit.point, reflected + fuzz * Random::GetVectorInUnitSphere());
 		attenuation = albedo;
 		return (Vector3::Dot(ray_scattered.direction, hit.normal) > 0.0);
 	}
@@ -94,7 +94,7 @@ public:
 		bool cannot_refract = refraction_ratio * sin_theta > 1.0;
 
 		Vector3 out_direction;
-		if (cannot_refract || Reflectance(cos_theta, refraction_ratio) > RandomDouble(0.0, 1.0))
+		if (cannot_refract || Reflectance(cos_theta, refraction_ratio) > Random::GetDouble(0.0, 1.0))
 			out_direction = Vector3::Reflect(unit_direction, hit.normal);
 		else out_direction = Vector3::Refract(unit_direction, hit.normal, refraction_ratio);
 

@@ -60,7 +60,7 @@ public:
         // In order to accomplish defocus blur, generate random scene rays
         // originating from inside a disk centered at the lookfrom point. 
         // The larger the radius, the greater the defocus blur.
-        Vector3 rd = lens_radius * Vector3::RandomInUnitDisk();
+        Vector3 rd = lens_radius * Random::GetVectorInUnitDisk();
         Vector3 offset = u * rd.x() + v * rd.y();
         return Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - (origin + offset));
     }

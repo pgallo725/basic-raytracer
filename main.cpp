@@ -20,8 +20,8 @@ HittableList RandomScene()
     {
         for (int b = -11; b < 11; b++) 
         {
-            auto choose_mat = RandomDouble(0, 1);
-            Point3 center(a + 0.9 * RandomDouble(0, 1), 0.2, b + 0.9 * RandomDouble(0, 1));
+            auto choose_mat = Random::GetDouble(0, 1);
+            Point3 center(a + 0.9 * Random::GetDouble(0, 1), 0.2, b + 0.9 * Random::GetDouble(0, 1));
 
             if ((center - Point3(4, 0.2, 0)).Length() > 0.9) 
             {
@@ -30,15 +30,15 @@ HittableList RandomScene()
                 if (choose_mat < 0.8) 
                 {
                     // diffuse
-                    auto albedo = Color::Random(0, 1) * Color::Random(0, 1);
+                    auto albedo = Random::GetColor(0, 1) * Random::GetColor(0, 1);
                     sphere_material = std::make_shared<Lambertian>(albedo);
                     world.Add(std::make_shared<Sphere>(center, 0.2, sphere_material));
                 }
                 else if (choose_mat < 0.95) 
                 {
                     // metal
-                    auto albedo = Color::Random(0.5, 1);
-                    auto fuzz = RandomDouble(0, 0.5);
+                    auto albedo = Random::GetColor(0.5, 1);
+                    auto fuzz = Random::GetDouble(0, 0.5);
                     sphere_material = std::make_shared<Metal>(albedo, fuzz);
                     world.Add(std::make_shared<Sphere>(center, 0.2, sphere_material));
                 }
@@ -95,13 +95,13 @@ int main()
     std::ofstream image = Image::Create("render.ppm", image_width, image_height, 255);
 
     std::vector<std::unique_ptr<RenderThread>> render_threads;
-    for (int i = 0; i < thread_count; i++)
+    for (int id = 0; id < thread_count; id++)
     {
         // Calculate the number of samples that each render thread will compute.
         int sample_count = int(samples_per_pixel / thread_count);
-        if (i < samples_per_pixel % thread_count) sample_count++;
+        if (id < samples_per_pixel % thread_count) sample_count++;
 
-        render_threads.emplace_back(std::make_unique<RenderThread>(
+        render_threads.emplace_back(std::make_unique<RenderThread>(id,
             world, camera, image_width, image_height, sample_count, max_bounces));
     }
 
