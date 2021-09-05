@@ -153,6 +153,7 @@
     <ClInclude Include="Hittable.h" />
     <ClInclude Include="HittableList.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="Parameters.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Ray.h" />

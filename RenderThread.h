@@ -29,7 +29,7 @@ private:
 
 public:
 
-	RenderThread(const int thread_id, const HittableList& scene, const Camera& camera,
+	RenderThread(const uint32_t thread_id, const HittableList& scene, const Camera& camera,
         const int width, const int height, const int samples, const int bounces)
 		: m_renderSemaphore(1), m_resultSemaphore(0), 
         ref_scene(scene), ref_camera(camera),

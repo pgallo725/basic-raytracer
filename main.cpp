@@ -2,6 +2,7 @@
 #include <chrono>
 
 #include "Common.h"
+#include "Parameters.h"
 #include "Image.h"
 #include "Camera.h"
 #include "HittableList.h"
@@ -66,16 +67,16 @@ HittableList RandomScene()
 }
 
 
-int main()
-{
-    // IMAGE PROPERTIES
 
-    const double aspect_ratio = 3.0 / 2.0;
-    const int image_width = 1200;
-    const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 500;
-    const int max_bounces = 50;
-    const int thread_count = 6;
+int main(int argc, const char** argv)
+{
+    // PARSE ARGUMENTS
+
+    Parameters params;
+    if (!params.ParseCommandLine(argc, argv))
+        return -1;
+
+    params.Print();
 
     // WORLD
 
@@ -89,30 +90,30 @@ int main()
     auto dist_to_focus = 10.0;
     auto aperture = 0.1;
 
-    Camera camera(look_from, look_at, view_up, 20, aspect_ratio, aperture, dist_to_focus);
+    Camera camera(look_from, look_at, view_up, 20, params.aspect_ratio, aperture, dist_to_focus);
 
     // RENDER IMAGE
 
     auto start_time = std::chrono::steady_clock::now();
 
-    std::ofstream image = Image::Create("render.ppm", image_width, image_height, 255);
+    std::ofstream image = Image::Create("render.ppm", params.image_width, params.image_height, 255);
 
     std::vector<std::unique_ptr<RenderThread>> render_threads;
-    for (int id = 0; id < thread_count; id++)
+    for (uint32_t id = 0; id < params.thread_count; id++)
     {
         // Calculate the number of samples that each render thread will compute.
-        int sample_count = int(samples_per_pixel / thread_count);
-        if (id < samples_per_pixel % thread_count) sample_count++;
+        int sample_count = int(params.samples_per_pixel / params.thread_count);
+        if (id < params.samples_per_pixel % params.thread_count) sample_count++;
 
         render_threads.emplace_back(std::make_unique<RenderThread>(id,
-            world, camera, image_width, image_height, sample_count, max_bounces));
+            world, camera, params.image_width, params.image_height, sample_count, params.max_bounces));
     }
 
     // Run a batch of render threads in parallel, each one rendering a subset of samples
     // of the entire image, and then combine their results together.
-    for (int j = image_height - 1; j >= 0; j--)
+    for (int j = params.image_height - 1; j >= 0; j--)
     {
-        std::cout << "\rRendering scanline " << (image_height - j) << '/' << image_height;
+        std::cout << "\rRendering scanline " << (params.image_height - j) << '/' << params.image_height;
 
         // Start the rendering loop for the current scanline on all threads.
         for (auto& thread : render_threads)
@@ -122,15 +123,15 @@ int main()
         for (auto& thread : render_threads)
             thread->WaitRender();
 
-        for (int i = 0; i < image_width; i++)
+        for (int i = 0; i < params.image_width; i++)
         {
             // Accumulate the samples collected by all render threads.
             Color pixel(0, 0, 0);
-            for (int t = 0; t < thread_count; t++)
+            for (int t = 0; t < params.thread_count; t++)
                 pixel += render_threads[t]->pixels[i];
 
             // Average samples to get the value of the final output pixel.
-            pixel /= thread_count;
+            pixel /= params.thread_count;
 
             Image::WritePixel(image, pixel);
         }
