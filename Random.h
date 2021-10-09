@@ -33,13 +33,6 @@ public:
 
 	inline static Vector3 GetUnitVector()
 	{
-		/*double rand_theta = RandomDouble(0.0, PI);
-		double rand_psi = RandomDouble(0.0, 2 * PI);
-
-		return Vector3(std::cos(rand_psi) * std::sin(rand_theta),
-			std::sin(rand_psi) * std::sin(rand_theta),
-			std::cos(rand_theta));*/
-
 		return Vector3::Normalized(Random::GetVectorInUnitSphere());
 	}
 
@@ -48,10 +41,10 @@ public:
 		while (true)
 		{
 			// Pick a random point in the unit cube, where x, y, and z in [-1, +1].
-			Vector3 p = Random::GetVector(-1, 1);
+			Vector3 vec = Random::GetVector(-1, 1);
 			// Reject this point and try again if the point is outside the sphere.
-			if (p.SqrLength() >= 1) continue;
-			return p;
+			if (vec.SqrLength() >= 1) continue;
+			return vec;
 		}
 	}
 
@@ -66,9 +59,9 @@ public:
 	{
 		while (true)
 		{
-			Vector3 p = Vector3(Random::GetDouble(-1, 1), Random::GetDouble(-1, 1), 0);
-			if (p.SqrLength() >= 1.0) continue;
-			return p;
+			Vector3 vec = Vector3(Random::GetDouble(-1, 1), Random::GetDouble(-1, 1), 0);
+			if (vec.SqrLength() >= 1.0) continue;
+			return vec;
 		}
 	}
 
