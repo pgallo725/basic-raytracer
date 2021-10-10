@@ -28,22 +28,30 @@ bool Sphere::Hit(const Ray& ray, double t_min, double t_max, HitRecord& hit) con
 {
     // Check if there exists any 't' that defines a point P which satisfies
     // the equation (Px - Cx)^2 + (Py - Cy)^2 + (Pz - Cz)^2 = r^2,
-    // rewritten as ((A + t * b) - C).((A + t * b) - C) - r^2 = 0,
+    // rewritten as ((O + t * d) - C).((O + t * d) - C) - r^2 = 0,
+    // where O is the ray origin and d is the ray direction,
     // which defines a point on the sphere's surface (an intersection)
+    // The equation is unrolled as t^2 * d.d + + 2 * t * d.(O - C) + (O - C).(O - C) - r^2 = 0
+    // Solving for the unknown t, this means that:
+    //  a = |d|^2
+    //  b = 2 * d.(O - C)
+    //  c = |O - C|^2 - r^2
+    // Using h = d.(O - C) such as 2h = b it is possible to simplify the calculation of
+    // the discriminant and the solutions of the equation by removing some multiplications.
     Vector3 oc = ray.origin - center;
     double a = ray.direction.SqrLength();
-    double b = 2.0 * Vector3::Dot(oc, ray.direction);
+    double h = Vector3::Dot(oc, ray.direction);
     double c = oc.SqrLength() - radius * radius;
-    double discriminant = b * b - 4 * a * c;
+    double discriminant = h * h - a * c;
 
     if (discriminant < 0) return false;
     double sqrtd = std::sqrt(discriminant);
 
     // Find the nearest root that lies in the specified range.
-    double root = (-b - sqrtd) / (2.0 * a);
+    double root = (-h - sqrtd) / a;
     if (root < t_min || root > t_max)
     {
-        root = (-b + sqrtd) / (2.0 * a);
+        root = (-h + sqrtd) / a;
         if (root < t_min || t_max < root)
             return false;
     }
