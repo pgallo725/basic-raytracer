@@ -2,14 +2,10 @@
 
 #include "Vector3.h"
 
-class Ray
+struct Ray
 {
-public:
-
 	Point3 origin;
 	Vector3 direction;
-
-public:
 
 	Ray() {}
 	Ray(const Point3& origin, const Vector3& direction)

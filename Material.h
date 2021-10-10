@@ -85,7 +85,7 @@ public:
 		attenuation = Color(1.0, 1.0, 1.0);
 
 		// Calculate the ratio between indexes of refraction (air = 1.0)
-		double refraction_ratio = hit.front_face ? (1.0 / ir) : ir;
+		double refraction_ratio = hit.is_front_face ? (1.0 / ir) : ir;
 
 		Vector3 unit_direction = Vector3::Normalized(ray_in.direction);
 

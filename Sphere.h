@@ -49,18 +49,19 @@ bool Sphere::Hit(const Ray& ray, double t_min, double t_max, HitRecord& hit) con
 
     // Find the nearest root that lies in the specified range.
     double root = (-h - sqrtd) / a;
-    if (root < t_min || root > t_max)
+    if ((root < t_min) | (root > t_max))
     {
         root = (-h + sqrtd) / a;
-        if (root < t_min || t_max < root)
+        if ((root < t_min) | (t_max < root))
             return false;
     }
     
     hit.t = root;
     hit.point = ray.At(hit.t);
     Vector3 outward_normal = (hit.point - center) / radius;
-    hit.SetFaceNormal(ray, outward_normal);
-    hit.material = material;
+    hit.is_front_face = Vector3::Dot(ray.direction, outward_normal) < 0.0;
+    hit.normal = hit.is_front_face ? outward_normal : -outward_normal;
+    hit.material = material.get();
 
     return true;
 }
