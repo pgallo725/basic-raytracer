@@ -9,6 +9,8 @@ class Material
 {
 public:
 
+	static std::shared_ptr<Material> Deserialize(const json& j);
+
 	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit,
 		Color& attenuation, Ray& ray_scattered) const = 0;
 };
@@ -113,3 +115,25 @@ private:
 		return r0 + (1 - r0) * pow((1 - cosine), 5);
 	}
 };
+
+
+
+std::shared_ptr<Material> Material::Deserialize(const json& j)
+{
+	std::string type = j.at("type").get<std::string>();
+
+	if (type.compare("Lambertian") == 0)
+	{
+		return std::make_shared<Lambertian>(j.at("albedo").get<Color>());
+	}
+	else if (type.compare("Metal") == 0)
+	{
+		return std::make_shared<Metal>(j.at("albedo").get<Color>(), j.at("fuzz").get<double>());
+	}
+	else if (type.compare("Dielectric") == 0)
+	{
+		return std::make_shared<Dielectric>(j.at("ior").get<double>());
+	}
+
+	throw std::exception(("Invalid material type: " + type).c_str());
+}

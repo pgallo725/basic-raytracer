@@ -5,6 +5,13 @@
 #include <limits>
 #include <memory>
 #include <vector>
+#include <string>
+
+
+// JSON library
+
+#include "nlohmann/json.hpp"
+using json = nlohmann::ordered_json;
 
 
 // Common Headers

@@ -4,9 +4,7 @@
 #include <semaphore>
 
 #include "Common.h"
-#include "Camera.h"
-#include "HittableList.h"
-#include "Material.h"
+#include "Scene.h"
 
 
 class RenderThread
@@ -21,22 +19,21 @@ private:
     std::thread m_thread;
     std::binary_semaphore m_renderSemaphore;
     std::binary_semaphore m_resultSemaphore;
-	const HittableList& ref_scene;
-    const Camera& ref_camera;
+	const Scene& ref_scene;
 	const int m_width, m_height;
 	const int m_samples;
     const int m_maxBounces;
 
 public:
 
-	RenderThread(const uint32_t thread_id, const HittableList& scene, const Camera& camera,
+	RenderThread(const uint32_t thread_id, const Scene& scene,
         const int width, const int height, const int samples, const int bounces)
-		: m_renderSemaphore(1), m_resultSemaphore(0), 
-        ref_scene(scene), ref_camera(camera),
+		: m_renderSemaphore(1), m_resultSemaphore(0), ref_scene(scene),
         m_width(width), m_height(height), m_samples(samples), m_maxBounces(bounces)
 	{
         pixels = new Color[m_width];
 
+        // Instantiate a thread to run the render loop with a unique seed
         Random::SeedCurrentThread(thread_id);
         m_thread = std::thread(&RenderThread::RenderLoop, this);
 	}
@@ -80,7 +77,7 @@ private:
                     double u = (i + Random::GetDouble(0.0, 1.0)) / (m_width - 1);
                     double v = (j + Random::GetDouble(0.0, 1.0)) / (m_height - 1);
 
-                    pixel += RayColor(ref_camera.GetRay(u, v), ref_scene, m_maxBounces);
+                    pixel += RayColor(ref_scene.camera.GetRay(u, v), ref_scene, m_maxBounces);
                 }
 
                 // Average the collected samples to get the color for the output pixel.

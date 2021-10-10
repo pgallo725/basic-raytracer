@@ -3,6 +3,9 @@
 #include <cmath>
 #include <iostream>
 
+#include "nlohmann/json.hpp"
+using json = nlohmann::ordered_json;
+
 
 class Vector3 
 {
@@ -57,3 +60,8 @@ inline Vector3 operator*(const double val, const Vector3& vec);
 // Type aliases for Vector3
 using Point3 = Vector3;			// 3D point
 using Color = Vector3;			// RGB color
+
+
+// JSON de/serialization functions
+void to_json(json& j, const Vector3& vec);
+void from_json(const json& j, Vector3& vec);

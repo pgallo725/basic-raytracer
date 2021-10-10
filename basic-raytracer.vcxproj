@@ -157,19 +157,20 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Random.cpp" />
+    <ClCompile Include="RenderSettings.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Hittable.h" />
-    <ClInclude Include="HittableList.h" />
     <ClInclude Include="Image.h" />
-    <ClInclude Include="Parameters.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="RenderSettings.h" />
     <ClInclude Include="RenderThread.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Vector3.h" />
   </ItemGroup>

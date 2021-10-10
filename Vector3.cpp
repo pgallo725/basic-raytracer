@@ -131,3 +131,16 @@ Vector3 Vector3::Refract(const Vector3& vec, const Vector3& normal, double etai_
 
 	return r_parallel + r_perpendicular;
 }
+
+
+// JSON de/serialization functions
+
+void to_json(json& j, const Vector3& vec)
+{
+	j = vec.values;
+}
+
+void from_json(const json& j, Vector3& vec)
+{
+	j.get_to(vec.values);
+}

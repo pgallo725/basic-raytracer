@@ -2,8 +2,11 @@
 
 #include "Common.h"
 
+
 class Camera
 {
+    friend class Scene;
+
 private:
 
 	Point3 origin;
@@ -13,28 +16,28 @@ private:
     Vector3 v, u, w;
     double lens_radius;
 
+    // Only needed for deserialization
+    Camera() : lens_radius(0) {};
+
 public:
 
 	Camera(Point3 look_from,
         Point3 look_at, 
         Vector3 view_up,
         double v_fov,        // vertical field-of-view in degrees
-        double aspect_ratio,
         double aperture,
         double focus_distance)
 	{
-        // The height of the viewport can be calculated from the FOV
-        // using simple trigonometry formulas.
+        // The height of the viewport can be calculated from the FOV with simple trigonometry.
         double theta = Deg2Rad(v_fov);
         double h = std::tan(theta / 2);
 
         // Viewport vertical coordinates span from -tan(theta/2) (bottom) to tan(theta/2) (top), 
-        // while the horizontal coordinates are still symmetrical -X (left) to X (right)
-        // but the exact values are computed based on the aspect ration, to keep standard
-        // square pixel spacing.
+        // while the horizontal coordinates are still symmetrical -X (left) to X (right) but the
+        // exact values are computed based on the aspect ratio, to keep standard square pixels.
 
         double viewport_height = 2.0 * h;
-        double viewport_width = aspect_ratio * viewport_height;
+        double viewport_width = RenderSettings::AspectRatio() * viewport_height;
 
         // Derive a view direction from the 2 points look_from and look_at
         w = Vector3::Normalized(look_from - look_at);
@@ -58,10 +61,22 @@ public:
     Ray GetRay(double s, double t) const
     {
         // In order to accomplish defocus blur, generate random scene rays
-        // originating from inside a disk centered at the lookfrom point. 
+        // originating from inside a disk centered at the look_from point. 
         // The larger the radius, the greater the defocus blur.
         Vector3 rd = lens_radius * Random::GetVectorInUnitDisk();
         Vector3 offset = u * rd.x() + v * rd.y();
         return Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - (origin + offset));
     }
 };
+
+
+// JSON deserialization function
+void from_json(const json& j, Camera& c)
+{
+    c = Camera(j.at("position").get<Point3>(),
+        j.at("lookAt").get<Point3>(),
+        j.at("viewUp").get<Vector3>(),
+        j.at("verticalFov").get<double>(),
+        j.at("aperture").get<double>(),
+        j.at("focusDistance").get<double>());
+}

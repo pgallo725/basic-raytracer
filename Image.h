@@ -3,7 +3,6 @@
 #include "Common.h"
 
 #include <fstream>
-#include <string>
 
 
 class Image

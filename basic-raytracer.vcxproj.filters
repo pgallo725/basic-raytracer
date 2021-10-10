@@ -24,6 +24,9 @@
     <ClCompile Include="Random.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="RenderSettings.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vector3.h">
@@ -36,9 +39,6 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="HittableList.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
@@ -59,7 +59,10 @@
     <ClInclude Include="Random.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Parameters.h">
+    <ClInclude Include="RenderSettings.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
