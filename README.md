@@ -9,7 +9,7 @@ After completing the book, I have expanded the software with the following featu
 * **PPM P6** binary encoding for more compact render outputs (instead of plain P3 ASCII encoding)
 * Display render progress and total time to complete
 
-![Rendered image](/render.png)
+![Rendered image](/images/render.png)
 
 ## How to run
 
