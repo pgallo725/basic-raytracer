@@ -6,32 +6,29 @@
 
 class Camera
 {
-    friend class Scene;
-
 private:
 
-	Point3 origin;
-	Point3 lower_left_corner;
-	Vector3 horizontal;
-	Vector3 vertical;
-    Vector3 v, u, w;
-    double lens_radius;
-
-    // Only needed for deserialization
-    Camera() : lens_radius(0) {};
+	Point3 m_origin;
+	Point3 m_lowerLeftCorner;
+	Vector3 m_horizontal;
+	Vector3 m_vertical;
+    Vector3 m_view, m_viewRight, m_viewUp;
+    double m_lensRadius;
 
 public:
 
-	Camera(Point3 look_from,
-        Point3 look_at, 
-        Vector3 view_up,
-        double v_fov,        // Vertical field-of-view (in degrees)
-        double aperture,
-        double focus_distance)
+    Camera() : Camera(Point3(0, 0, 0), Point3(0, 0, 1), Point3(0, 1, 0), 20, 0.1, 10) {};
+
+	Camera(const Point3& look_from,
+        const Point3& look_at, 
+        const Vector3& world_up,
+        const double v_fov,        // Vertical field-of-view (in degrees)
+        const double aperture,
+        const double focus_distance)
 	{
         // The height of the viewport can be calculated from the FOV with simple trigonometry.
-        double theta = Deg2Rad(v_fov);
-        double h = std::tan(theta / 2);
+        const double theta = Deg2Rad(v_fov);
+        const double h = std::tan(theta / 2);
 
         // Viewport vertical coordinates span from -tan(theta/2) (bottom) to tan(theta/2) (top), 
         // while the horizontal coordinates are still symmetrical -X (left) to X (right) but the
@@ -39,35 +36,35 @@ public:
 
         const RenderSettings& settings = RenderSettings::Get();
 
-        double viewport_height = 2.0 * h;
-        double viewport_width = settings.AspectRatio() * viewport_height;
+        const double viewport_height = 2.0 * h;
+        const double viewport_width = settings.AspectRatio() * viewport_height;
 
         // Derive a view direction from the 2 points look_from and look_at
-        w = Vector3::Normalized(look_from - look_at);
+        m_view = Vector3::Normalized(look_from - look_at);
         // Then, using the provided world up vector, derive the right direction
-        u = Vector3::Normalized(Vector3::Cross(view_up, w));
+        m_viewRight = Vector3::Normalized(Vector3::Cross(world_up, m_view));
         // Finally, complete the orthonormal basis by computing the actual view up vector
-        v = Vector3::Cross(w, u);
+        m_viewUp = Vector3::Cross(m_view, m_viewRight);
 
         // The “eye” is placed at the provided look_from point. 
         // The distance between the projection plane and the eye is set to one unit (“focal length”)
-        // along the view direction (-w, for convention).
+        // along the view direction (-m_view, for convention).
 
-        origin = look_from;
-        horizontal = focus_distance * viewport_width * u;
-        vertical = focus_distance * viewport_height * v;
-        lower_left_corner = origin - horizontal / 2 - vertical / 2 - focus_distance * w;
+        m_origin = look_from;
+        m_horizontal = focus_distance * viewport_width * m_viewRight;
+        m_vertical = focus_distance * viewport_height * m_viewUp;
+        m_lowerLeftCorner = m_origin - m_horizontal / 2 - m_vertical / 2 - focus_distance * m_view;
 
-        lens_radius = aperture / 2;
+        m_lensRadius = aperture / 2;
 	}
 
-    Ray GetRay(double s, double t) const
+    Ray GetRay(const double s, const double t) const noexcept
     {
         // In order to accomplish defocus blur, generate random scene rays
         // originating from inside a disk centered at the look_from point. 
         // The larger the radius, the greater the defocus blur.
-        Vector3 rd = lens_radius * Random::GetVectorInUnitDisk();
-        Vector3 offset = u * rd.x() + v * rd.y();
-        return Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - (origin + offset));
+        Vector3 rd = m_lensRadius * Random::GetVectorInUnitDisk();
+        Vector3 offset = m_viewRight * rd.x() + m_viewUp * rd.y();
+        return Ray(m_origin + offset, m_lowerLeftCorner + s * m_horizontal + t * m_vertical - (m_origin + offset));
     }
 };
