@@ -10,25 +10,25 @@ class RenderSettings
 {
 private:
 
-    std::string     scene_path = "scene.json";
-    std::string     output_path = "render.ppm";
-    uint32_t        image_width = 1280;
-    uint32_t        image_height = 720;
-    uint32_t        samples_per_pixel = 500;
-    uint32_t        max_bounces = 50;
-    uint32_t        thread_count = 4;
-    double          aspect_ratio = 16.0 / 9.0;
+    std::string     m_scenePath = "scene.json";
+    std::string     m_outputPath = "render.ppm";
+    uint32_t        m_imageWidth = 1280;
+    uint32_t        m_imageHeight = 720;
+    uint32_t        m_samplesPerPixel = 500;
+    uint32_t        m_maxBounces = 50;
+    uint32_t        m_threadCount = 4;
+    double          m_aspectRatio = 16.0 / 9.0;
 
 public:
 
-    std::string   ScenePath()        const noexcept { return scene_path; }
-    std::string   OutputPath()       const noexcept { return output_path; }
-    uint32_t      ImageWidth()       const noexcept { return image_width; }
-    uint32_t      ImageHeight()      const noexcept { return image_height; }
-    uint32_t      SamplesPerPixel()  const noexcept { return samples_per_pixel; }
-    uint32_t      MaxBounces()       const noexcept { return max_bounces; }
-    uint32_t      ThreadCount()      const noexcept { return thread_count; }
-    double        AspectRatio()      const noexcept { return aspect_ratio; }
+    std::string   ScenePath()        const noexcept { return m_scenePath; }
+    std::string   OutputPath()       const noexcept { return m_outputPath; }
+    uint32_t      ImageWidth()       const noexcept { return m_imageWidth; }
+    uint32_t      ImageHeight()      const noexcept { return m_imageHeight; }
+    uint32_t      SamplesPerPixel()  const noexcept { return m_samplesPerPixel; }
+    uint32_t      MaxBounces()       const noexcept { return m_maxBounces; }
+    uint32_t      ThreadCount()      const noexcept { return m_threadCount; }
+    double        AspectRatio()      const noexcept { return m_aspectRatio; }
 
 
     static RenderSettings& Get() noexcept
@@ -43,12 +43,12 @@ public:
         if (argc < 5)
             throw std::exception("insufficient number of parameters");
 
-        scene_path = ReadStringParam(argv, 1, "scene");
-        output_path = ReadStringParam(argv, 2, "output");
-        image_width = ReadUInt32Param(argv, 3, "width");
-        image_height = ReadUInt32Param(argv, 4, "height");
+        m_scenePath = ReadStringParam(argv, 1, "scene");
+        m_outputPath = ReadStringParam(argv, 2, "output");
+        m_imageWidth = ReadUInt32Param(argv, 3, "width");
+        m_imageHeight = ReadUInt32Param(argv, 4, "height");
 
-        aspect_ratio = double(image_width) / double(image_height);
+        m_aspectRatio = double(m_imageWidth) / double(m_imageHeight);
 
         int index = 5;
         while (index < argc)
@@ -61,17 +61,17 @@ public:
 
             if (option.compare("-s") == 0 || option.compare("--samples") == 0)
             {
-                samples_per_pixel = ReadUInt32Param(argv, index, "samples");
+                m_samplesPerPixel = ReadUInt32Param(argv, index, "samples");
                 index += 1;
             }
             else if (option.compare("-b") == 0 || option.compare("--bounces") == 0)
             {
-                max_bounces = ReadUInt32Param(argv, index, "bounces");
+                m_maxBounces = ReadUInt32Param(argv, index, "bounces");
                 index += 1;
             }
             else if (option.compare("-t") == 0 || option.compare("--threads") == 0)
             {
-                thread_count = ReadUInt32Param(argv, index, "threads");
+                m_threadCount = ReadUInt32Param(argv, index, "threads");
                 index += 1;
             }
             else
@@ -87,12 +87,12 @@ public:
     {
         std::cout << '\n'
             << "RENDER SETTINGS:\n\n"
-            << " Scene File: \t\t"          << scene_path                               << '\n'
-            << " Output File: \t\t"         << output_path                              << '\n'
-            << " Image Resolution: \t"      << image_width << 'x' << image_height       << '\n'
-            << " Samples per Pixel: \t"     << samples_per_pixel                        << '\n'
-            << " Max. Bounces: \t\t"        << max_bounces                              << '\n'
-            << " Num. Threads: \t\t"        << thread_count                             << '\n'
+            << " Scene File: \t\t"          << m_scenePath                              << '\n'
+            << " Output File: \t\t"         << m_outputPath                             << '\n'
+            << " Image Resolution: \t"      << m_imageWidth << 'x' << m_imageHeight     << '\n'
+            << " Samples per Pixel: \t"     << m_samplesPerPixel                        << '\n'
+            << " Max. Bounces: \t\t"        << m_maxBounces                             << '\n'
+            << " Num. Threads: \t\t"        << m_threadCount                            << '\n'
             << std::endl;
     }
 
