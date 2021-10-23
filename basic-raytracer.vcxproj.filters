@@ -31,9 +31,6 @@
     <ClCompile Include="src\Random.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="src\RenderSettings.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vector3.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>

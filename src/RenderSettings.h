@@ -1,7 +1,7 @@
 #pragma once
 
-#include <exception>
 #include <iostream>
+#include <exception>
 
 #include "Common.h"
 
@@ -9,9 +9,6 @@
 class RenderSettings
 {
 private:
-
-    // Static storage for global render settings
-    static RenderSettings settings;
 
     std::string     scene_path = "scene.json";
     std::string     output_path = "render.ppm";
@@ -24,101 +21,94 @@ private:
 
 public:
 
-    static bool ParseCommandLine(const int argc, const char** const argv)
+    std::string   ScenePath()        const noexcept { return scene_path; }
+    std::string   OutputPath()       const noexcept { return output_path; }
+    uint32_t      ImageWidth()       const noexcept { return image_width; }
+    uint32_t      ImageHeight()      const noexcept { return image_height; }
+    uint32_t      SamplesPerPixel()  const noexcept { return samples_per_pixel; }
+    uint32_t      MaxBounces()       const noexcept { return max_bounces; }
+    uint32_t      ThreadCount()      const noexcept { return thread_count; }
+    double        AspectRatio()      const noexcept { return aspect_ratio; }
+
+
+    static RenderSettings& Get() noexcept
+    {
+        static RenderSettings settings;     // Static singleton storage for render settings
+        return settings;
+    }
+
+
+    void ParseCommandLine(const int argc, const char** const argv)
     {
         if (argc < 5)
+            throw std::exception("insufficient number of parameters");
+
+        scene_path = ReadStringParam(argv, 1, "scene");
+        output_path = ReadStringParam(argv, 2, "output");
+        image_width = ReadUInt32Param(argv, 3, "width");
+        image_height = ReadUInt32Param(argv, 4, "height");
+
+        aspect_ratio = double(image_width) / double(image_height);
+
+        int index = 5;
+        while (index < argc)
         {
-            std::cerr << "ERROR: insufficient number of parameters\n"
-                << "Usage: " << argv[0] << " <scene> <output> <width> <height> [-s/--samples <value>] [-b/--bounces <value>] [-t/--threads <value>]"
-                << std::endl;
+            std::string option = ReadOptionSpecifier(argv, index);
+            index += 1;
 
-            return false;
-        }
+            if (index == argc)
+                throw std::exception(("option '" + option + "' is not followed by a value").c_str());
 
-        try
-        {
-            settings.scene_path = ReadStringParam(argv, 1, "scene");
-            settings.output_path = ReadStringParam(argv, 2, "output");
-            settings.image_width = ReadUInt32Param(argv, 3, "width");
-            settings.image_height = ReadUInt32Param(argv, 4, "height");
-
-            settings.aspect_ratio = double(settings.image_width) / double(settings.image_height);
-
-            int index = 5;
-            while (index < argc)
+            if (option.compare("-s") == 0 || option.compare("--samples") == 0)
             {
-                std::string option = ReadOptionSpecifier(argv, index);
+                samples_per_pixel = ReadUInt32Param(argv, index, "samples");
                 index += 1;
-
-                if (index == argc)
-                    throw std::exception(("option '" + option + "' is not followed by a value").c_str());
-
-                if (option.compare("-s") == 0 || option.compare("--samples") == 0)
-                {
-                    settings.samples_per_pixel = ReadUInt32Param(argv, index, "samples");
-                    index += 1;
-                }
-                else if (option.compare("-b") == 0 || option.compare("--bounces") == 0)
-                {
-                    settings.max_bounces = ReadUInt32Param(argv, index, "bounces");
-                    index += 1;
-                }
-                else if (option.compare("-t") == 0 || option.compare("--threads") == 0)
-                {
-                    settings.thread_count = ReadUInt32Param(argv, index, "threads");
-                    index += 1;
-                }
-                else
-                {
-                    std::cerr << "WARNING: "
-                        << '\'' << option << "' is not a supported option specifier and will be skipped"
-                        << std::endl;
-                }
             }
-
-            return true;
-        }
-        catch (std::exception e)
-        {
-            std::cerr << "ERROR: " << e.what() << std::endl;
-
-            return false;
+            else if (option.compare("-b") == 0 || option.compare("--bounces") == 0)
+            {
+                max_bounces = ReadUInt32Param(argv, index, "bounces");
+                index += 1;
+            }
+            else if (option.compare("-t") == 0 || option.compare("--threads") == 0)
+            {
+                thread_count = ReadUInt32Param(argv, index, "threads");
+                index += 1;
+            }
+            else
+            {
+                std::cerr << "WARNING: "
+                    << '\'' << option << "' is not a supported option specifier and will be skipped"
+                    << std::endl;
+            }
         }
     }
 
-    static void Print()
+    void Print() const noexcept
     {
         std::cout << '\n'
             << "RENDER SETTINGS:\n\n"
-            << " Scene File: \t\t"          << settings.scene_path                                      << '\n'
-            << " Output File: \t\t"         << settings.output_path                                     << '\n'
-            << " Image Resolution: \t"      << settings.image_width << 'x' << settings.image_height     << '\n'
-            << " Samples per Pixel: \t"     << settings.samples_per_pixel                               << '\n'
-            << " Max. Bounces: \t\t"        << settings.max_bounces                                     << '\n'
-            << " Num. Threads: \t\t"        << settings.thread_count                                    << '\n'
+            << " Scene File: \t\t"          << scene_path                               << '\n'
+            << " Output File: \t\t"         << output_path                              << '\n'
+            << " Image Resolution: \t"      << image_width << 'x' << image_height       << '\n'
+            << " Samples per Pixel: \t"     << samples_per_pixel                        << '\n'
+            << " Max. Bounces: \t\t"        << max_bounces                              << '\n'
+            << " Num. Threads: \t\t"        << thread_count                             << '\n'
             << std::endl;
     }
 
-    inline static std::string   ScenePath()         { return settings.scene_path; }
-    inline static std::string   OutputPath()        { return settings.output_path; }
-    inline static uint32_t      ImageWidth()        { return settings.image_width; }
-    inline static uint32_t      ImageHeight()       { return settings.image_height; }
-    inline static uint32_t      SamplesPerPixel()   { return settings.samples_per_pixel; }
-    inline static uint32_t      MaxBounces()        { return settings.max_bounces; }
-    inline static uint32_t      ThreadCount()       { return settings.thread_count; }
-    inline static double        AspectRatio()       { return settings.aspect_ratio; }
 
 private:
 
     // Prevent the class from being instantiated by making the constructor private
     RenderSettings() {};
 
-    static std::string ReadStringParam(const char** const argv, const int index, const std::string& name)
+
+    inline static std::string ReadStringParam(const char** const argv, const int index, const std::string& name)
     {
         return std::string(argv[index]);
     }
 
-    static uint32_t ReadUInt32Param(const char** const argv, const int index, const std::string& name)
+    inline static uint32_t ReadUInt32Param(const char** const argv, const int index, const std::string& name)
     {
         std::string value_str = std::string(argv[index]);
         try
@@ -136,7 +126,7 @@ private:
         }
     }
 
-    static std::string ReadOptionSpecifier(const char** const argv, const int index)
+    inline static std::string ReadOptionSpecifier(const char** const argv, const int index)
     {
         std::string option = std::string(argv[index]);
 

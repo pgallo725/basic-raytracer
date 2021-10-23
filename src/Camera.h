@@ -36,8 +36,10 @@ public:
         // while the horizontal coordinates are still symmetrical -X (left) to X (right) but the
         // exact values are computed based on the aspect ratio, to keep standard square pixels.
 
+        const RenderSettings& settings = RenderSettings::Get();
+
         double viewport_height = 2.0 * h;
-        double viewport_width = RenderSettings::AspectRatio() * viewport_height;
+        double viewport_width = settings.AspectRatio() * viewport_height;
 
         // Derive a view direction from the 2 points look_from and look_at
         w = Vector3::Normalized(look_from - look_at);
