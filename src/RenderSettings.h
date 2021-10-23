@@ -13,22 +13,23 @@ private:
     // Static storage for global render settings
     static RenderSettings settings;
 
-    std::string scene_path = "scene.json";
-    uint32_t    image_width = 1280;
-    uint32_t    image_height = 720;
-    uint32_t    samples_per_pixel = 500;
-    uint32_t    max_bounces = 50;
-    uint32_t    thread_count = 4;
-    double      aspect_ratio = 16.0 / 9.0;
+    std::string     scene_path = "scene.json";
+    std::string     output_path = "render.ppm";
+    uint32_t        image_width = 1280;
+    uint32_t        image_height = 720;
+    uint32_t        samples_per_pixel = 500;
+    uint32_t        max_bounces = 50;
+    uint32_t        thread_count = 4;
+    double          aspect_ratio = 16.0 / 9.0;
 
 public:
 
     static bool ParseCommandLine(const int argc, const char** const argv)
     {
-        if (argc < 4)
+        if (argc < 5)
         {
             std::cerr << "ERROR: insufficient number of parameters\n"
-                << "Usage: " << argv[0] << " <scene> <width> <height> [-s/--samples <value>] [-b/--bounces <value>] [-t/--threads <value>]"
+                << "Usage: " << argv[0] << " <scene> <output> <width> <height> [-s/--samples <value>] [-b/--bounces <value>] [-t/--threads <value>]"
                 << std::endl;
 
             return false;
@@ -37,12 +38,13 @@ public:
         try
         {
             settings.scene_path = ReadStringParam(argv, 1, "scene");
-            settings.image_width = ReadUInt32Param(argv, 2, "width");
-            settings.image_height = ReadUInt32Param(argv, 3, "height");
+            settings.output_path = ReadStringParam(argv, 2, "output");
+            settings.image_width = ReadUInt32Param(argv, 3, "width");
+            settings.image_height = ReadUInt32Param(argv, 4, "height");
 
             settings.aspect_ratio = double(settings.image_width) / double(settings.image_height);
 
-            int index = 4;
+            int index = 5;
             while (index < argc)
             {
                 std::string option = ReadOptionSpecifier(argv, index);
@@ -89,6 +91,7 @@ public:
         std::cout << '\n'
             << "RENDER SETTINGS:\n\n"
             << " Scene File: \t\t"          << settings.scene_path                                      << '\n'
+            << " Output File: \t\t"         << settings.output_path                                     << '\n'
             << " Image Resolution: \t"      << settings.image_width << 'x' << settings.image_height     << '\n'
             << " Samples per Pixel: \t"     << settings.samples_per_pixel                               << '\n'
             << " Max. Bounces: \t\t"        << settings.max_bounces                                     << '\n'
@@ -97,6 +100,7 @@ public:
     }
 
     inline static std::string   ScenePath()         { return settings.scene_path; }
+    inline static std::string   OutputPath()        { return settings.output_path; }
     inline static uint32_t      ImageWidth()        { return settings.image_width; }
     inline static uint32_t      ImageHeight()       { return settings.image_height; }
     inline static uint32_t      SamplesPerPixel()   { return settings.samples_per_pixel; }
