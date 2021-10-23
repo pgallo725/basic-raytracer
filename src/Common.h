@@ -7,25 +7,16 @@
 #include <vector>
 #include <string>
 
-
-// JSON library
-
-#include "nlohmann/json.hpp"
-using json = nlohmann::ordered_json;
-
-
 // Common Headers
 
 #include "Ray.h"
 #include "Vector3.h"
 #include "Random.h"
 
-
 // Constants
 
 constexpr double Infinity = std::numeric_limits<double>::infinity();
 constexpr double PI = 3.1415926535897932385;
-
 
 // Utility Functions
 

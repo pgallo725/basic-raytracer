@@ -1,16 +1,13 @@
 #pragma once
 
-#include <fstream>
-
 #include "Common.h"
+#include "Hittable.h"
 #include "Camera.h"
 #include "Sphere.h"
 
 
 class Scene : public Hittable
 {
-	friend void from_json(const json& j, Scene& s);
-
 public:
 
 	Camera camera;
@@ -20,16 +17,6 @@ public:
 	Scene() {};
 
 public:
-
-	static Scene Load(const std::string& filename)
-	{
-		std::ifstream file(filename);
-		json json_data;
-		file >> json_data;
-		file.close();
-
-		return json_data.get<Scene>();
-	}
 
     virtual bool Hit(const Ray& ray, double t_min, double t_max, HitRecord& hit) const override;
 };
@@ -53,12 +40,4 @@ bool Scene::Hit(const Ray& ray, double t_min, double t_max, HitRecord& hit) cons
 	}
 
 	return hit_something;
-}
-
-
-// JSON deserialization function
-void from_json(const json& j, Scene& s)
-{
-	j.at("camera").get_to<Camera>(s.camera);
-	j.at("spheres").get_to<std::vector<Sphere>>(s.spheres);
 }

@@ -57,7 +57,7 @@
     <ClInclude Include="src\Ray.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-	<ClInclude Include="src\Renderer.h">
+    <ClInclude Include="src\Renderer.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\RenderSettings.h">
@@ -73,6 +73,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\Vector3.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JsonDeserializer.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

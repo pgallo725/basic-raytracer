@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common.h"
+#include "RenderSettings.h"
 
 
 class Camera
@@ -24,7 +25,7 @@ public:
 	Camera(Point3 look_from,
         Point3 look_at, 
         Vector3 view_up,
-        double v_fov,        // vertical field-of-view in degrees
+        double v_fov,        // Vertical field-of-view (in degrees)
         double aperture,
         double focus_distance)
 	{
@@ -70,15 +71,3 @@ public:
         return Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - (origin + offset));
     }
 };
-
-
-// JSON deserialization function
-void from_json(const json& j, Camera& c)
-{
-    c = Camera(j.at("position").get<Point3>(),
-        j.at("lookAt").get<Point3>(),
-        j.at("viewUp").get<Vector3>(),
-        j.at("verticalFov").get<double>(),
-        j.at("aperture").get<double>(),
-        j.at("focusDistance").get<double>());
-}

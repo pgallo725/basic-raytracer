@@ -4,6 +4,7 @@
 
 #include "Common.h"
 #include "Image.h"
+#include "JsonDeserializer.h"
 #include "RenderSettings.h"
 #include "Renderer.h"
 #include "Scene.h"
@@ -14,7 +15,7 @@ std::string usageString(const char* program)
     std::string str = "Usage: ";
     str.append(program);                                                                        // Program name
     str.append(" <scene> <output> <width> <height>");                                           // Required parameters
-    str.append(" [-s / --samples <value>][-b / --bounces <value>][-t / --threads <value>]");    // Optional parameters
+    str.append(" [-s / --samples <value>] [-b / --bounces <value>] [-t / --threads <value>]");  // Optional parameters
     return str;
 }
 
@@ -37,7 +38,7 @@ int main(int argc, const char** argv)
 
     // LOAD SCENE
 
-    Scene scene = Scene::Load(settings.ScenePath());
+    Scene scene = JsonDeserializer::LoadScene(settings.ScenePath());
 
     // RENDER IMAGE
 

@@ -65,12 +65,3 @@ bool Sphere::Hit(const Ray& ray, double t_min, double t_max, HitRecord& hit) con
 
     return true;
 }
-
-
-// JSON deserialization function
-void from_json(const json& j, Sphere& s)
-{
-    j.at("center").get_to<Point3>(s.center);
-    j.at("radius").get_to<double>(s.radius);
-    s.material = Material::Deserialize(j.at("material"));
-}
