@@ -3,7 +3,7 @@
   {
     "position": [ 13, 2, 3 ],
     "lookAt": [ 0, 0, 0 ],
-    "viewUp": [ 0, 1, 0 ],
+    "worldUp": [ 0, 1, 0 ],
     "verticalFov": 20,
     "aperture": 0.1,
     "focusDistance": 10.0

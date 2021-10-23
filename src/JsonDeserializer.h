@@ -63,7 +63,7 @@ void from_json(const json& j, Camera& c)
 {
     c = Camera(j.at("position").get<Point3>(),
         j.at("lookAt").get<Point3>(),
-        j.at("viewUp").get<Vector3>(),
+        j.at("worldUp").get<Vector3>(),
         j.at("verticalFov").get<double>(),
         j.at("aperture").get<double>(),
         j.at("focusDistance").get<double>());
