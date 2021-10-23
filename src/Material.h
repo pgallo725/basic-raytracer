@@ -3,12 +3,13 @@
 #include "Common.h"
 
 
+// Defines an abstract common interface for all materials.
 class Material
 {
 public:
 
-	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit,
-		Color& attenuation, Ray& ray_scattered) const = 0;
+	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered) 
+		const noexcept = 0;
 };
 
 
@@ -16,14 +17,15 @@ class Lambertian : public Material
 {
 public:
 
-	Color albedo;
+	const Color albedo;
 
 public:
 
-	Lambertian(const Color& color) : albedo(color) {}
+	Lambertian(const Color& color) noexcept
+		: albedo(color) {}
 
-	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit,
-		Color& attenuation, Ray& ray_scattered) const override
+	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered) 
+		const noexcept override final
 	{
 		// Scatter the incoming ray in a random direction off the surface
 		// (offset by the face normal to avoid rays going inside the surface).
@@ -44,19 +46,21 @@ class Metal : public Material
 {
 public:
 
-	Color albedo;
-	double fuzz;
+	const Color albedo;
+	const double fuzz;
 
 public:
 
-	Metal(const Color& color, double fuzz) : albedo(color), fuzz(fuzz < 1.0 ? fuzz : 1.0) {}
+	Metal(const Color& color, const double fuzz) noexcept
+		: albedo(color), fuzz(fuzz < 1.0 ? fuzz : 1.0) {}
 
-	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit,
-		Color& attenuation, Ray& ray_scattered) const override
+	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered) 
+		const noexcept override final
 	{
 		// Metallic reflection of the incoming ray along the surface normal.
-		Vector3 unit_direction = Vector3::Normalized(ray_in.direction);
-		Vector3 reflected = Vector3::Reflect(unit_direction, hit.normal);
+		const Vector3 unit_direction = Vector3::Normalized(ray_in.direction);
+		const Vector3 reflected = Vector3::Reflect(unit_direction, hit.normal);
+
 		// Adding fuzziness to the reflected ray by slightly changing the ray direction.
 		ray_scattered = Ray(hit.point, reflected + fuzz * Random::GetVectorInUnitSphere());
 		attenuation = albedo;
@@ -69,44 +73,54 @@ class Dielectric : public Material
 {
 public:
 
-	double ir;	// Index of Refraction
+	const double ir;	// Index of Refraction
 
 public:
 
-	Dielectric(const double index_of_refraction) : ir(index_of_refraction) {}
+	Dielectric(const double index_of_refraction) noexcept
+		: ir(index_of_refraction) {}
 
-	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit,
-		Color& attenuation, Ray& ray_scattered) const override
+	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered) 
+		const noexcept override final
 	{
-		attenuation = Color(1.0, 1.0, 1.0);
+		const Vector3 unit_direction = Vector3::Normalized(ray_in.direction);
 
 		// Calculate the ratio between indexes of refraction (air = 1.0)
-		double refraction_ratio = hit.is_front_face ? (1.0 / ir) : ir;
-
-		Vector3 unit_direction = Vector3::Normalized(ray_in.direction);
+		const double refraction_ratio = hit.is_front_face ? (1.0 / ir) : ir;
 
 		// Using Snell's law to determine whether the incoming ray
 		// can be refracted or only reflected (Total Internal Reflection).
-		double cos_theta = fmin(Vector3::Dot(-unit_direction, hit.normal), 1.0);
-		double sin_theta = std::sqrt(1 - cos_theta * cos_theta);
-		bool cannot_refract = refraction_ratio * sin_theta > 1.0;
+		const double cos_theta = fmin(Vector3::Dot(-unit_direction, hit.normal), 1.0);
+		const double sin_theta = std::sqrt(1 - cos_theta * cos_theta);
 
-		Vector3 out_direction;
-		if (cannot_refract || Reflectance(cos_theta, refraction_ratio) > Random::GetDouble(0.0, 1.0))
-			out_direction = Vector3::Reflect(unit_direction, hit.normal);
-		else out_direction = Vector3::Refract(unit_direction, hit.normal, refraction_ratio);
+		const bool reflect = CannotRefract(sin_theta, refraction_ratio) || ShouldReflect(cos_theta, refraction_ratio);
+
+		Vector3 out_direction = reflect ? 
+			Vector3::Reflect(unit_direction, hit.normal) :
+			Vector3::Refract(unit_direction, hit.normal, refraction_ratio);
 
 		ray_scattered = Ray(hit.point, out_direction);
+		attenuation = Color(1.0, 1.0, 1.0);
 		return true;
 	}
 
 private:
 
-	inline static double Reflectance(double cosine, double refraction_index)
+	inline static bool CannotRefract(const double sin_theta, const double refraction_ratio) noexcept
+	{
+		return refraction_ratio * sin_theta > 1.0;
+	}
+
+	inline static bool ShouldReflect(const double cos_theta, const double refraction_ratio) noexcept
+	{
+		return Reflectance(cos_theta, refraction_ratio) > Random::GetDouble(0.0, 1.0);
+	}
+
+	inline static double Reflectance(const double cosine, const double refraction) noexcept
 	{
 		// Use Schlick's approximation for reflectance.
 		// (a.k.a. varying reflectivity based on the angle)
-		auto r0 = (1 - refraction_index) / (1 + refraction_index);
+		auto r0 = (1 - refraction) / (1 + refraction);
 		r0 = r0 * r0;
 		return r0 + (1 - r0) * pow((1 - cosine), 5);
 	}
