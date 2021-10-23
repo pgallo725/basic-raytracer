@@ -13,31 +13,25 @@ public:
 	Camera camera;
     std::vector<Sphere> spheres;
 
-	// Only needed for deserialization
-	Scene() {};
-
 public:
 
-    virtual bool Hit(const Ray& ray, double t_min, double t_max, HitRecord& hit) const override;
-};
-
-
-// Checks ray-object intersection for all objects in the scene list and returns the closest one to the camera.
-bool Scene::Hit(const Ray& ray, double t_min, double t_max, HitRecord& hit) const
-{
-	HitRecord temp_hit;
-	bool hit_something = false;
-	double t_closest = t_max;
-
-	for (const auto& sphere : spheres)
+	// Checks ray-object intersection for all objects in the scene list and returns the closest one to the camera.
+	virtual bool Hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit) const noexcept override
 	{
-		if (sphere.Hit(ray, t_min, t_closest, temp_hit))
-		{
-			t_closest = temp_hit.t;
-			hit_something = true;
-			hit = temp_hit;
-		}
-	}
+		HitRecord last_hit;
+		bool hit_something = false;
+		double t_closest = t_max;
 
-	return hit_something;
-}
+		for (const auto& sphere : spheres)
+		{
+			if (sphere.Hit(ray, t_min, t_closest, last_hit))
+			{
+				t_closest = last_hit.t;
+				hit_something = true;
+				hit = last_hit;
+			}
+		}
+
+		return hit_something;
+	}
+};
