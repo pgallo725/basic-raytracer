@@ -12,9 +12,9 @@ struct Ray
 		: origin(origin), direction(direction)
 	{}
 
-	Point3 At(const double t) const
+	Point3 At(const double t) const noexcept
 	{
-		// P(t) = A + t*b
+		// P(t) = A + t * b
 		return origin + t * direction;
 	}
 };
