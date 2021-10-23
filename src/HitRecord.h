@@ -5,7 +5,7 @@
 class Material;		// Forward declaration
 
 
-// Contains the information about a ray-object intersection
+// Contains the information about a ray-object intersection.
 struct HitRecord
 {
     double           t = 0.0;
