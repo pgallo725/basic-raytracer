@@ -43,7 +43,7 @@ int main(int argc, const char** argv)
 
     auto start_time = std::chrono::steady_clock::now();
 
-    std::ofstream image = Image::Create(settings.OutputPath(), settings.ImageWidth(), settings.ImageHeight(), 255);
+    Image image(settings.OutputPath(), settings.ImageWidth(), settings.ImageHeight());
 
     std::vector<std::unique_ptr<RenderThread>> render_threads;
     for (uint32_t id = 0; id < settings.ThreadCount(); id++)
@@ -80,7 +80,7 @@ int main(int argc, const char** argv)
             // Average samples to get the value of the final output pixel.
             pixel /= settings.ThreadCount();
 
-            Image::WritePixel(image, pixel);
+            image.Write(pixel);
         }
     }
 
@@ -88,7 +88,7 @@ int main(int argc, const char** argv)
     for (auto& thread : render_threads)
         thread->Join();
 
-    Image::Close(image);
+    image.Close();
 
     auto end_time = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
