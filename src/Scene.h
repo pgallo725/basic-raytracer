@@ -16,7 +16,8 @@ public:
 public:
 
 	// Checks ray-object intersection for all objects in the scene list and returns the closest one to the camera.
-	virtual bool Hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit) const noexcept override
+	virtual bool Hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit) 
+		const noexcept override final
 	{
 		HitRecord last_hit;
 		bool hit_something = false;

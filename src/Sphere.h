@@ -21,7 +21,8 @@ public:
 
 
     // Ray-sphere intersection checking.
-    virtual bool Hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit) const noexcept override
+    virtual bool Hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit) 
+        const noexcept override final
     {
         // Check if there exists any 't' that defines a point P which satisfies
         // the equation (Px - Cx)^2 + (Py - Cy)^2 + (Pz - Cz)^2 = r^2,
