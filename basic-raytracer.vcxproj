@@ -32,6 +32,7 @@
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\HitRecord.h" />
     <ClInclude Include="src\Hittable.h" />
     <ClInclude Include="src\Image.h" />
     <ClInclude Include="src\JsonDeserializer.h" />

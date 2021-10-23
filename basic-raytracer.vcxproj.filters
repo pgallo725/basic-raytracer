@@ -78,5 +78,8 @@
     <ClInclude Include="src\JsonDeserializer.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="src\HitRecord.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,9 +9,10 @@
 
 // Common Headers
 
-#include "Ray.h"
 #include "Vector3.h"
 #include "Random.h"
+#include "Ray.h"
+#include "HitRecord.h"
 
 // Constants
 
