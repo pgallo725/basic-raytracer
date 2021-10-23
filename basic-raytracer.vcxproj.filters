@@ -57,6 +57,9 @@
     <ClInclude Include="src\Ray.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+	<ClInclude Include="src\Renderer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
     <ClInclude Include="src\RenderSettings.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
