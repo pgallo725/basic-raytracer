@@ -32,7 +32,7 @@ public:
         const uint32_t height,
         const uint32_t samples, 
         const uint32_t bounces) :
-		m_renderSemaphore(1),
+		m_renderSemaphore(0),
         m_resultSemaphore(0),
         ref_scene(scene),
         m_width(width), m_height(height),
