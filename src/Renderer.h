@@ -54,7 +54,7 @@ public:
                     pixel += thread->pixels[i];
 
                 // Average samples to get the value of the final output pixel.
-                pixel /= m_renderThreads.size();
+                pixel /= (double)m_renderThreads.size();
 
                 image.Write(pixel);
             }
