@@ -24,7 +24,7 @@ public:
 	Lambertian(const Color& color) noexcept
 		: albedo(color) {}
 
-	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered) 
+	virtual bool Scatter(const Ray& /*ray_in*/, const HitRecord& hit, Color& attenuation, Ray& ray_scattered)
 		const noexcept override final
 	{
 		// Scatter the incoming ray in a random direction off the surface

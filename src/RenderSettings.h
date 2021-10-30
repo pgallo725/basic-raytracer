@@ -103,7 +103,7 @@ private:
     RenderSettings() {};
 
 
-    inline static std::string ReadStringParam(const char** const argv, const int index, const std::string& name)
+    inline static std::string ReadStringParam(const char** const argv, const int index, const std::string& /*name*/)
     {
         return std::string(argv[index]);
     }
