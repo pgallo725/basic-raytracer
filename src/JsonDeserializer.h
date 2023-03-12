@@ -15,6 +15,7 @@ using json = nlohmann::ordered_json;
 
 // Forward declaration of JSON deserialization functions
 void from_json(const json&, Vector3&);
+void from_json(const json&, std::shared_ptr<Texture>&);
 void from_json(const json&, std::shared_ptr<Material>&);
 void from_json(const json&, Camera&);
 void from_json(const json&, std::shared_ptr<Sphere>&);
@@ -45,13 +46,28 @@ void from_json(const json& j, Vector3& vec)
 }
 
 
+// Texture deserialization
+void from_json(const json& j, std::shared_ptr<Texture>& t)
+{
+    std::string type = j.at("type").get<std::string>();
+
+    if (type.compare("SolidColor") == 0)
+        t = std::make_shared<SolidTexture>(j.at("color").get<Color>());
+    else if (type.compare("Checkerboard") == 0)
+        t = std::make_shared<CheckerTexture>(j.at("even").get<Color>(), j.at("odd").get<Color>(), j.at("scale").get<double>());
+    else throw std::exception(("Invalid texture type: " + type).c_str());
+}
+
+
 // Material deserialization
 void from_json(const json& j, std::shared_ptr<Material>& m)
 {
 	std::string type = j.at("type").get<std::string>();
 
-	if (type.compare("Lambertian") == 0)
-        m = std::make_shared<Lambertian>(j.at("albedo").get<Color>());
+	if (type.compare("LambertianColor") == 0)
+        m = std::make_shared<LambertianColor>(j.at("albedo").get<Color>());
+    else if (type.compare("LambertianTexture") == 0)
+        m = std::make_shared<LambertianTexture>(j.at("texture").get<std::shared_ptr<Texture>>());
 	else if (type.compare("Metal") == 0)
 		m = std::make_shared<Metal>(j.at("albedo").get<Color>(), j.at("fuzz").get<double>());
 	else if (type.compare("Dielectric") == 0)

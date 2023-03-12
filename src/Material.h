@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common.h"
+#include "Texture.h"
 
 
 // Defines an abstract common interface for all materials.
@@ -13,7 +14,7 @@ public:
 };
 
 
-class Lambertian : public Material
+class LambertianColor : public Material
 {
 public:
 
@@ -21,7 +22,7 @@ public:
 
 public:
 
-	Lambertian(const Color& color) noexcept
+	LambertianColor(const Color& color) noexcept
 		: albedo(color) {}
 
 	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered)
@@ -37,6 +38,35 @@ public:
 
 		ray_scattered = Ray(hit.point, scatter_direction, ray_in.time);
 		attenuation = albedo;
+		return true;
+	}
+};
+
+
+class LambertianTexture : public Material
+{
+public:
+
+	const std::shared_ptr<Texture> albedo;
+
+public:
+
+	LambertianTexture(const std::shared_ptr<Texture>& texture) noexcept
+		: albedo(texture) {}
+
+	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered)
+		const noexcept override final
+	{
+		// Scatter the incoming ray in a random direction off the surface
+		// (offset by the face normal to avoid rays going inside the surface).
+		Vector3 scatter_direction = hit.normal + Random::GetUnitVector();
+
+		// Catch potentially degenerate scatter direction.
+		if (scatter_direction.NearZero())
+			scatter_direction = hit.normal;
+
+		ray_scattered = Ray(hit.point, scatter_direction, ray_in.time);
+		attenuation = albedo->Sample(hit.u, hit.v, hit.point);
 		return true;
 	}
 };

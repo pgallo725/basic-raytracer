@@ -58,6 +58,7 @@ public:
         hit.t = root;
         hit.point = ray.At(hit.t);
         const Vector3 outward_normal = (hit.point - center) / radius;
+        GetSphereUV(outward_normal, hit.u, hit.v);
         hit.is_front_face = Vector3::Dot(ray.direction, outward_normal) < 0.0;
         hit.normal = hit.is_front_face ? outward_normal : -outward_normal;
         hit.material = material.get();
