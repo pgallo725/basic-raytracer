@@ -17,7 +17,8 @@ using json = nlohmann::ordered_json;
 void from_json(const json&, Vector3&);
 void from_json(const json&, std::shared_ptr<Material>&);
 void from_json(const json&, Camera&);
-void from_json(const json&, Sphere&);
+void from_json(const json&, std::shared_ptr<Sphere>&);
+void from_json(const json&, std::shared_ptr<MovingSphere>&);
 void from_json(const json&, Scene&);
 
 
@@ -76,22 +77,22 @@ void from_json(const json& j, Camera& c)
 
 
 // Sphere deserialization
-void from_json(const json& j, Sphere& s)
+void from_json(const json& j, std::shared_ptr<Sphere>& s)
 {
-    j.at("center").get_to<Point3>(s.center);
-    j.at("radius").get_to<double>(s.radius);
-    j.at("material").get_to<std::shared_ptr<Material>>(s.material);
+    s = std::make_shared<Sphere>(j.at("center").get<Point3>(),
+                                 j.at("radius").get<double>(),
+                                 j.at("material").get<std::shared_ptr<Material>>());
 }
 
 
 // MovingSphere deserialization
-void from_json(const json& j, MovingSphere& ms)
+void from_json(const json& j, std::shared_ptr<MovingSphere>& ms)
 {
-    j.at("center").get_to<Point3>(ms.center);
-    j.at("radius").get_to<double>(ms.radius);
-    j.at("direction").get_to<Vector3>(ms.direction);
-    j.at("speed").get_to<double>(ms.speed);
-    j.at("material").get_to<std::shared_ptr<Material>>(ms.material);
+    ms = std::make_shared<MovingSphere>(j.at("center").get<Point3>(),
+                                        j.at("radius").get<double>(),
+                                        j.at("direction").get<Vector3>(),
+                                        j.at("speed").get<double>(),
+                                        j.at("material").get<std::shared_ptr<Material>>());
 }
 
 
@@ -99,6 +100,12 @@ void from_json(const json& j, MovingSphere& ms)
 void from_json(const json& j, Scene& s)
 {
     j.at("camera").get_to<Camera>(s.camera);
-    j.at("spheres").get_to<std::vector<Sphere>>(s.spheres);
-    j.at("movingSpheres").get_to<std::vector<MovingSphere>>(s.moving_spheres);
+    
+    auto spheres = j.at("spheres").get<std::vector<std::shared_ptr<Sphere>>>();
+    auto movingSpheres = j.at("movingSpheres").get<std::vector<std::shared_ptr<MovingSphere>>>();
+
+    for (const auto& sphere : spheres)
+        s.objects.push_back(sphere);
+    for (const auto& movingSphere : movingSpheres)
+        s.objects.push_back(movingSphere);
 }

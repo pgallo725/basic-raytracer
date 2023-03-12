@@ -7,37 +7,25 @@
 #include "MovingSphere.h"
 
 
-class Scene : public Hittable
+class Scene
 {
 public:
 
-	Camera                    camera;
-    std::vector<Sphere>       spheres;
-    std::vector<MovingSphere> moving_spheres;
+	Camera camera;
+    std::vector<std::shared_ptr<Hittable>> objects;
 
 public:
 
 	// Checks ray-object intersection for all objects in the scene list and returns the closest one to the camera.
-	virtual bool Hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit) 
-		const noexcept override final
+	bool Hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit) const noexcept
 	{
 		HitRecord last_hit;
 		bool hit_something = false;
 		double t_closest = t_max;
 
-		for (const auto& sphere : spheres)
+		for (const auto& object : objects)
 		{
-			if (sphere.Hit(ray, t_min, t_closest, last_hit))
-			{
-				t_closest = last_hit.t;
-				hit_something = true;
-				hit = last_hit;
-			}
-		}
-
-		for (const auto& moving_sphere : moving_spheres)
-		{
-			if (moving_sphere.Hit(ray, t_min, t_closest, last_hit))
+			if (object->Hit(ray, t_min, t_closest, last_hit))
 			{
 				t_closest = last_hit.t;
 				hit_something = true;
