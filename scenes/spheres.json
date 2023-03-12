@@ -6,7 +6,9 @@
     "worldUp": [ 0, 1, 0 ],
     "verticalFov": 20,
     "aperture": 0.1,
-    "focusDistance": 10.0
+    "focusDistance": 10.0,
+    "timeShutterOpen": 0.0,
+    "timeShutterClose": 1.0
   },
   "spheres": [
     {
@@ -3981,5 +3983,6 @@
         "fuzz": 0.0
       }
     }
-  ]
+  ],
+  "movingSpheres": []
 }

@@ -4,14 +4,16 @@
 #include "Hittable.h"
 #include "Camera.h"
 #include "Sphere.h"
+#include "MovingSphere.h"
 
 
 class Scene : public Hittable
 {
 public:
 
-	Camera camera;
-    std::vector<Sphere> spheres;
+	Camera                    camera;
+    std::vector<Sphere>       spheres;
+    std::vector<MovingSphere> moving_spheres;
 
 public:
 
@@ -26,6 +28,16 @@ public:
 		for (const auto& sphere : spheres)
 		{
 			if (sphere.Hit(ray, t_min, t_closest, last_hit))
+			{
+				t_closest = last_hit.t;
+				hit_something = true;
+				hit = last_hit;
+			}
+		}
+
+		for (const auto& moving_sphere : moving_spheres)
+		{
+			if (moving_sphere.Hit(ray, t_min, t_closest, last_hit))
 			{
 				t_closest = last_hit.t;
 				hit_something = true;

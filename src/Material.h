@@ -24,7 +24,7 @@ public:
 	Lambertian(const Color& color) noexcept
 		: albedo(color) {}
 
-	virtual bool Scatter(const Ray& /*ray_in*/, const HitRecord& hit, Color& attenuation, Ray& ray_scattered)
+	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered)
 		const noexcept override final
 	{
 		// Scatter the incoming ray in a random direction off the surface
@@ -35,7 +35,7 @@ public:
 		if (scatter_direction.NearZero())
 			scatter_direction = hit.normal;
 
-		ray_scattered = Ray(hit.point, scatter_direction);
+		ray_scattered = Ray(hit.point, scatter_direction, ray_in.time);
 		attenuation = albedo;
 		return true;
 	}
@@ -62,7 +62,7 @@ public:
 		const Vector3 reflected = Vector3::Reflect(unit_direction, hit.normal);
 
 		// Adding fuzziness to the reflected ray by slightly changing the ray direction.
-		ray_scattered = Ray(hit.point, reflected + fuzz * Random::GetVectorInUnitSphere());
+		ray_scattered = Ray(hit.point, reflected + fuzz * Random::GetVectorInUnitSphere(), ray_in.time);
 		attenuation = albedo;
 		return (Vector3::Dot(ray_scattered.direction, hit.normal) > 0.0);
 	}
@@ -99,7 +99,7 @@ public:
 			Vector3::Reflect(unit_direction, hit.normal) :
 			Vector3::Refract(unit_direction, hit.normal, refraction_ratio);
 
-		ray_scattered = Ray(hit.point, out_direction);
+		ray_scattered = Ray(hit.point, out_direction, ray_in.time);
 		attenuation = Color(1.0, 1.0, 1.0);
 		return true;
 	}

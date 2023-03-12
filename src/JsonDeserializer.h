@@ -5,6 +5,7 @@
 #include "Vector3.h"
 #include "Material.h"
 #include "Sphere.h"
+#include "MovingSphere.h"
 #include "Camera.h"
 #include "Scene.h"
 
@@ -61,12 +62,16 @@ void from_json(const json& j, std::shared_ptr<Material>& m)
 // Camera deserialization
 void from_json(const json& j, Camera& c)
 {
-    c = Camera(j.at("position").get<Point3>(),
+    c = Camera(
+        j.at("position").get<Point3>(),
         j.at("lookAt").get<Point3>(),
         j.at("worldUp").get<Vector3>(),
         j.at("verticalFov").get<double>(),
         j.at("aperture").get<double>(),
-        j.at("focusDistance").get<double>());
+        j.at("focusDistance").get<double>(),
+        j.at("timeShutterOpen").get<double>(),
+        j.at("timeShutterClose").get<double>()
+    );
 }
 
 
@@ -79,9 +84,21 @@ void from_json(const json& j, Sphere& s)
 }
 
 
+// MovingSphere deserialization
+void from_json(const json& j, MovingSphere& ms)
+{
+    j.at("center").get_to<Point3>(ms.center);
+    j.at("radius").get_to<double>(ms.radius);
+    j.at("direction").get_to<Vector3>(ms.direction);
+    j.at("speed").get_to<double>(ms.speed);
+    j.at("material").get_to<std::shared_ptr<Material>>(ms.material);
+}
+
+
 // Scene deserialization
 void from_json(const json& j, Scene& s)
 {
     j.at("camera").get_to<Camera>(s.camera);
     j.at("spheres").get_to<std::vector<Sphere>>(s.spheres);
+    j.at("movingSpheres").get_to<std::vector<MovingSphere>>(s.moving_spheres);
 }

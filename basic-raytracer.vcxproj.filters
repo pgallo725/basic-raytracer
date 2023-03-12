@@ -15,11 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="scenes\scene.json">
-      <Filter>File di risorse</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="images\render.png">
       <Filter>File di risorse</Filter>
     </Image>
@@ -81,5 +76,19 @@
     <ClInclude Include="src\HitRecord.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="src\MovingSphere.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JsonSerializer.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="scenes\bouncing_spheres.json">
+      <Filter>File di risorse</Filter>
+    </None>
+    <None Include="scenes\spheres.json">
+      <Filter>File di risorse</Filter>
+    </None>
   </ItemGroup>
 </Project>

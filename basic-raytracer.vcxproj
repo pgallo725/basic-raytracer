@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="scenes\scene.json" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="images\render.png" />
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +33,9 @@
     <ClInclude Include="src\Hittable.h" />
     <ClInclude Include="src\Image.h" />
     <ClInclude Include="src\JsonDeserializer.h" />
+    <ClInclude Include="src\JsonSerializer.h" />
     <ClInclude Include="src\Material.h" />
+    <ClInclude Include="src\MovingSphere.h" />
     <ClInclude Include="src\Random.h" />
     <ClInclude Include="src\Ray.h" />
     <ClInclude Include="src\Renderer.h" />
@@ -45,6 +44,10 @@
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Vector3.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="scenes\bouncing_spheres.json" />
+    <None Include="scenes\spheres.json" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
