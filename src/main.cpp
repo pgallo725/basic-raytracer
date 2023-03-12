@@ -32,7 +32,11 @@ int main(int argc, const char** argv)
 
     // LOAD SCENE
 
-    const Scene scene = JsonDeserializer::LoadScene(settings.ScenePath());
+    Scene scene = JsonDeserializer::LoadScene(settings.ScenePath());
+
+    // BUILD BVH STRUCTURE
+
+    scene.BuildBVH(scene.camera.GetTimeShutterOpen(), scene.camera.GetTimeShutterClose());
 
     // RENDER IMAGE
 

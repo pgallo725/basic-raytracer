@@ -63,6 +63,9 @@ public:
         m_timeEnd = time_end;
 	}
 
+    double GetTimeShutterOpen()  const noexcept { return m_timeStart; }
+    double GetTimeShutterClose() const noexcept { return m_timeEnd;   }
+
     Ray GetRay(const double s, const double t) const noexcept
     {
         // In order to accomplish defocus blur, generate random scene rays

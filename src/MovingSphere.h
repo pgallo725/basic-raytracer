@@ -68,6 +68,21 @@ public:
         return true;
     }
 
+
+    // MovingSphere bounding box.
+    virtual bool BoundingBox(const double t_start, const double t_end, AABB& box)
+        const noexcept override final
+    {
+        const Point3 center_start = GetCenterAt(t_start);
+        const Point3 center_end = GetCenterAt(t_end);
+        const Vector3 offset = Vector3(radius, radius, radius);
+
+        const AABB box_start = AABB((center_start - offset), (center_start + offset));
+        const AABB box_end = AABB((center_end - offset), (center_end + offset));
+        box = AABB::Combine(box_start, box_end);
+        return true;
+    }
+
 private:
 
     Point3 GetCenterAt(double t) const noexcept

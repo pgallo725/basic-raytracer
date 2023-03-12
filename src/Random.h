@@ -15,6 +15,7 @@ public:
 
 	static void SeedCurrentThread(const unsigned long long seed) noexcept;
 
+	static int     GetInteger(const int min, const int max) noexcept;
 	static double  GetDouble(const double min, const double max) noexcept;
 	static Vector3 GetVector(const double min, const double max) noexcept;
 	static Color   GetColor(const double min = 0.0, const double max = 1.0) noexcept;

@@ -12,6 +12,12 @@ void Random::SeedCurrentThread(const unsigned long long seed) noexcept
 }
 
 
+int Random::GetInteger(const int min, const int max) noexcept
+{
+	std::uniform_real_distribution<double> distribution(min, max+1);
+	return static_cast<int>(distribution(m_generator));
+}
+
 double Random::GetDouble(const double min, const double max) noexcept
 {
 	std::uniform_real_distribution<double> distribution(min, max);

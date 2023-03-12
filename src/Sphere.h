@@ -64,4 +64,14 @@ public:
 
         return true;
     }
+
+
+    // Sphere bounding box.
+    virtual bool BoundingBox(const double /*t_start*/, const double /*t_end*/, AABB& box)
+        const noexcept override final
+    {
+        box = AABB(center - Point3(radius, radius, radius),
+                   center + Point3(radius, radius, radius));
+        return true;
+    }
 };
