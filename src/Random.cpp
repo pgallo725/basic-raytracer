@@ -71,3 +71,106 @@ Vector3 Random::GetVectorInUnitDisk() noexcept
 		return vec;
 	}
 }
+
+
+Perlin::Perlin()
+{
+	m_randomVectors = new Vector3[c_nPoints];
+	for (int i = 0; i < c_nPoints; ++i)
+		m_randomVectors[i] = Random::GetUnitVector();
+
+	m_permutationX = GeneratePermutation();
+	m_permutationY = GeneratePermutation();
+	m_permutationZ = GeneratePermutation();
+}
+
+Perlin::~Perlin()
+{
+	delete[] m_randomVectors;
+	delete[] m_permutationX;
+	delete[] m_permutationY;
+	delete[] m_permutationZ;
+}
+
+double Perlin::Noise(const Point3& p) const noexcept
+{
+	const int x = static_cast<int>(std::floor(p.x()));
+	const int y = static_cast<int>(std::floor(p.y()));
+	const int z = static_cast<int>(std::floor(p.z()));
+
+	// Gather 8 noise samples
+	Vector3 c[2][2][2];
+	c[0][0][0] = GatherRandomSample(x,   y,   z  );
+	c[1][0][0] = GatherRandomSample(x+1, y,   z  );
+	c[0][1][0] = GatherRandomSample(x,   y+1, z  );
+	c[1][1][0] = GatherRandomSample(x+1, y+1, z  );
+	c[0][0][1] = GatherRandomSample(x,   y,   z+1);
+	c[1][0][1] = GatherRandomSample(x+1, y,   z+1);
+	c[0][1][1] = GatherRandomSample(x,   y+1, z+1);
+	c[1][1][1] = GatherRandomSample(x+1, y+1, z+1);
+
+	const double u = p.x() - std::floor(p.x());
+	const double v = p.y() - std::floor(p.y());
+	const double w = p.z() - std::floor(p.z());
+
+	// Use Hermite cubic function to smooth the interpolation factors
+	const double uu = u * u * (3.0 - 2.0 * u);
+	const double vv = v * v * (3.0 - 2.0 * v);
+	const double ww = w * w * (3.0 - 2.0 * w);
+
+	// Trilinearly interpolate 8 noise samples to smooth out the result
+	double result = 0.0;
+	for (int i = 0; i < 2; ++i)
+		for (int j = 0; j < 2; ++j)
+			for (int k = 0; k < 2; ++k)
+			{
+				Vector3 weight(u - i, v - j, w - k);
+				result += (i * uu + (1.0 - i) * (1.0 - uu))
+						* (j * vv + (1.0 - j) * (1.0 - vv))
+						* (k * ww + (1.0 - k) * (1.0 - ww))
+						* Vector3::Dot(c[i][j][k], weight);
+			}
+	return result;
+}
+
+double Perlin::TurbulentNoise(const Point3& p, int depth) const noexcept
+{
+	double result = 0.0;
+	double scale = 1.0;
+	double weight = 1.0;
+
+	for (int i = 0; i < depth; ++i)
+	{
+		result += weight * Noise(p * scale);
+		scale *= 2.0;
+		weight *= 0.5;
+	}
+
+	return std::fabs(result);
+}
+
+int* Perlin::GeneratePermutation() noexcept
+{
+	int* p = new int[c_nPoints];
+
+	for (int i = 0; i < c_nPoints; ++i)
+		p[i] = i;
+
+	for (int i = c_nPoints - 1; i > 0; --i)
+	{
+		const int target = Random::GetInteger(0, i);
+		std::swap(p[i], p[target]);
+	}
+
+	return p;
+}
+
+Vector3 Perlin::GatherRandomSample(int i, int j, int k) const noexcept
+{
+	return m_randomVectors
+	[
+		m_permutationX[i & 255] ^
+		m_permutationY[j & 255] ^
+		m_permutationZ[k & 255]
+	];
+}

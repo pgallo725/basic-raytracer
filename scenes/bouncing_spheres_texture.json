@@ -17,10 +17,10 @@
       "material": {
         "type": "LambertianTexture",
         "texture": {
-          "type": "Checkerboard",
-          "even": [ 0.2, 0.3, 0.1 ],
-          "odd": [ 0.9, 0.9, 0.9 ],
-          "scale": 10.0
+          "type": "Marble",
+          "color": [ 1.0, 1.0, 1.0 ],
+          "scale": 5.0,
+          "turbulence": 10.0
         }
       }
     },

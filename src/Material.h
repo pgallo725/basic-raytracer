@@ -9,6 +9,8 @@ class Material
 {
 public:
 
+	virtual ~Material() = default;
+
 	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered) 
 		const noexcept = 0;
 };
