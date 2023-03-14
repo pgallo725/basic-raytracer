@@ -59,6 +59,8 @@ void from_json(const json& j, std::shared_ptr<Texture>& t)
         t = std::make_shared<NoiseTexture>(j.at("color").get<Color>(), j.at("scale").get<double>());
     else if (type.compare("Marble") == 0)
         t = std::make_shared<MarbleTexture>(j.at("color").get<Color>(), j.at("scale").get<double>(), j.at("turbulence").get<double>());
+    else if (type.compare("Image") == 0)
+        t = std::make_shared<ImageTexture>(j.at("filename").get<std::string>());
     else throw std::exception(("Invalid texture type: " + type).c_str());
 }
 

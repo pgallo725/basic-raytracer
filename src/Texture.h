@@ -2,6 +2,17 @@
 
 #include "Common.h"
 
+#ifdef _MSC_VER
+    #pragma warning (push, 0)
+#endif
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
+
+#ifdef _MSC_VER
+    #pragma warning (pop)
+#endif
+
 
 class Texture
 {
@@ -100,4 +111,55 @@ private:
 	Color  color;
 	double scale = 1.0;
 	double turbulence = 1.0;
+};
+
+
+class ImageTexture : public Texture
+{
+public:
+
+	ImageTexture() = default;
+	ImageTexture(const std::string& filename)
+	{
+		data = std::unique_ptr<stbi_uc>(stbi_load(filename.c_str(), &width, &height, &components, 3));
+
+		if (!data)
+		{
+			std::cerr << "ERROR: Could not load texture image file '" << filename << "'.\n";
+			width = height = components = 0;
+		}
+	}
+
+	virtual Color Sample(const double u, const double v, const Point3& /*p*/)
+		const noexcept
+	{
+		// If we have no texture data, then return solid pink as a debugging aid.
+		if (data == nullptr)
+			return Color(1, 0, 1);
+
+		// Clamp input texture coordinates to [0,1] x [1,0]
+		double uu = Clamp(u, 0.0, 1.0);
+		double vv = 1.0 - Clamp(v, 0.0, 1.0);  // Flip V to image coordinates
+
+		int i = static_cast<int>(uu * width);
+		int j = static_cast<int>(vv * height);
+
+		// Clamp integer mapping, since actual coordinates should be less than 1.0
+		if (i >= width)  i = width - 1;
+		if (j >= height) j = height - 1;
+
+		const int bytes_pixel = components;
+		const int bytes_scanline = width * bytes_pixel;
+
+		const stbi_uc* pixel = data.get() + j * bytes_scanline + i * bytes_pixel;
+
+		const double scale = 1.0 / 255.0;
+		return Color(scale * pixel[0], scale * pixel[1], scale * pixel[2]);
+	}
+
+private:
+
+	std::unique_ptr<stbi_uc> data;
+	int width = 0, height = 0;
+	int components = 0;
 };

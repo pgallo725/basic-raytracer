@@ -36,8 +36,11 @@
       "center": [ -4.0, 1.0, 0.0 ],
       "radius": 1.0,
       "material": {
-        "type": "LambertianColor",
-        "albedo": [ 0.4, 0.2, 0.1 ]
+        "type": "LambertianTexture",
+        "texture": {
+          "type": "Image",
+          "filename": "textures/earthmap.jpg"
+        }
       }
     },
     {
