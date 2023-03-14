@@ -56,7 +56,7 @@ inline void GetSphereUV(const Point3& point, double& u, double& v)
     // to -pi and proceed back to 0. To get a contiguous interval value we can use the following
     // formulation instead: atan2(a, b) = atan2(-a, -b) + pi.
     const double theta = std::acos(-point.y());
-    const double phi = std::atan2(-point.z(), -point.x()) + PI;
+    const double phi = std::atan2(-point.z(), point.x()) + PI;
 
     u = phi / (2 * PI);     // phi is in [0, 2pi]
     v = theta / PI;         // theta is in [0, pi]
