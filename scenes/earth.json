@@ -1,4 +1,5 @@
 {
+  "background": [ 0.7, 0.8, 1.0 ],
   "camera": 
   {
     "position": [ 13, 2, 3 ],
@@ -23,6 +24,6 @@
       }
     }
   ],
-  "movingSpheres": [
-  ]
+  "movingSpheres": [],
+  "rectangles": []
 }

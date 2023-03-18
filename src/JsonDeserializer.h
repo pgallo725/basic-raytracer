@@ -6,6 +6,7 @@
 #include "Material.h"
 #include "Sphere.h"
 #include "MovingSphere.h"
+#include "Rectangle.h"
 #include "Camera.h"
 #include "Scene.h"
 
@@ -20,6 +21,7 @@ void from_json(const json&, std::shared_ptr<Material>&);
 void from_json(const json&, Camera&);
 void from_json(const json&, std::shared_ptr<Sphere>&);
 void from_json(const json&, std::shared_ptr<MovingSphere>&);
+void from_json(const json&, std::shared_ptr<Rectangle>&);
 void from_json(const json&, Scene&);
 
 
@@ -78,6 +80,8 @@ void from_json(const json& j, std::shared_ptr<Material>& m)
 		m = std::make_shared<Metal>(j.at("albedo").get<Color>(), j.at("fuzz").get<double>());
 	else if (type.compare("Dielectric") == 0)
 		m = std::make_shared<Dielectric>(j.at("ior").get<double>());
+    else if (type.compare("DiffuseLight") == 0)
+        m = std::make_shared<DiffuseLight>(j.at("color").get<Color>());
     else throw std::exception(("Invalid material type: " + type).c_str());
 }
 
@@ -118,16 +122,29 @@ void from_json(const json& j, std::shared_ptr<MovingSphere>& ms)
 }
 
 
+// Rectangle deserialization
+void from_json(const json& j, std::shared_ptr<Rectangle>& ms)
+{
+    ms = std::make_shared<Rectangle>(j.at("firstCorner").get<Point3>(),
+                                     j.at("secondCorner").get<Point3>(),
+                                     j.at("material").get<std::shared_ptr<Material>>());
+}
+
+
 // Scene deserialization
 void from_json(const json& j, Scene& s)
 {
+    j.at("background").get_to<Color>(s.background);
     j.at("camera").get_to<Camera>(s.camera);
     
     auto spheres = j.at("spheres").get<std::vector<std::shared_ptr<Sphere>>>();
     auto movingSpheres = j.at("movingSpheres").get<std::vector<std::shared_ptr<MovingSphere>>>();
+    auto rectangles = j.at("rectangles").get<std::vector<std::shared_ptr<Rectangle>>>();
 
     for (const auto& sphere : spheres)
         s.objects.push_back(sphere);
     for (const auto& movingSphere : movingSpheres)
         s.objects.push_back(movingSphere);
+    for (const auto& rectangle : rectangles)
+        s.objects.push_back(rectangle);
 }

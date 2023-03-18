@@ -1,0 +1,66 @@
+{
+  "background": [ 0.0, 0.0, 0.0 ],
+  "camera": 
+  {
+    "position": [ 278, 278, -800 ],
+    "lookAt": [ 278, 278, 0 ],
+    "worldUp": [ 0, 1, 0 ],
+    "verticalFov": 40,
+    "aperture": 0.0,
+    "focusDistance": 800.0,
+    "timeShutterOpen": 0.0,
+    "timeShutterClose": 1.0
+  },
+  "spheres": [],
+  "movingSpheres": [],
+  "rectangles": [
+    {
+      "firstCorner": [ 555.0, 0.0, 0.0 ],
+      "secondCorner": [ 555.0, 555.0, 555.0 ],
+      "material": {
+        "type": "LambertianColor",
+        "albedo": [ 0.12, 0.45, 0.15 ]
+      }
+    },
+    {
+      "firstCorner": [ 0.0, 0.0, 0.0 ],
+      "secondCorner": [ 0.0, 555.0, 555.0 ],
+      "material": {
+        "type": "LambertianColor",
+        "albedo": [ 0.65, 0.05, 0.05 ]
+      }
+    },
+    {
+      "firstCorner": [ 0.0, 0.0, 0.0 ],
+      "secondCorner": [ 555.0, 0.0, 555.0 ],
+      "material": {
+        "type": "LambertianColor",
+        "albedo": [ 0.73, 0.73, 0.73 ]
+      }
+    },
+    {
+      "firstCorner": [ 0.0, 555.0, 0.0 ],
+      "secondCorner": [ 555.0, 555.0, 555.0 ],
+      "material": {
+        "type": "LambertianColor",
+        "albedo": [ 0.73, 0.73, 0.73 ]
+      }
+    },
+    {
+      "firstCorner": [ 0.0, 0.0, 555.0 ],
+      "secondCorner": [ 555.0, 555.0, 555.0 ],
+      "material": {
+        "type": "LambertianColor",
+        "albedo": [ 0.73, 0.73, 0.73 ]
+      }
+    },
+    {
+      "firstCorner": [ 175.0, 554.0, 175.0 ],
+      "secondCorner": [ 380.0, 554.0, 380.0 ],
+      "material": {
+        "type": "DiffuseLight",
+        "color": [ 15.0, 15.0, 15.0 ]
+      }
+    }
+  ]
+}

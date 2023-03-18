@@ -12,6 +12,7 @@ class Scene
 {
 public:
 
+	Color background;
 	Camera camera;
     std::vector<std::shared_ptr<Hittable>> objects;
 	std::shared_ptr<NodeBVH> bvh;

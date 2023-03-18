@@ -1,0 +1,53 @@
+{
+  "background": [ 0.0, 0.0, 0.0 ],
+  "camera": 
+  {
+    "position": [ 26, 3, 6 ],
+    "lookAt": [ 0, 2, 0 ],
+    "worldUp": [ 0, 1, 0 ],
+    "verticalFov": 20,
+    "aperture": 0.0,
+    "focusDistance": 20.0,
+    "timeShutterOpen": 0.0,
+    "timeShutterClose": 1.0
+  },
+  "spheres": [
+    {
+      "center": [ 0.0, -1000.0, 0.0 ],
+      "radius": 1000.0,
+      "material": {
+        "type": "LambertianTexture",
+        "texture": {
+          "type": "Marble",
+          "color": [ 1.0, 1.0, 1.0 ],
+          "scale": 4.0,
+          "turbulence": 10.0
+        }
+      }
+    },
+    {
+      "center": [ 0.0, 2.0, 0.0 ],
+      "radius": 2.0,
+      "material": {
+        "type": "LambertianTexture",
+        "texture": {
+          "type": "Marble",
+          "color": [ 0.8, 0.9, 1.0 ],
+          "scale": 4.0,
+          "turbulence": 10.0
+        }
+      }
+    }
+  ],
+  "movingSpheres": [],
+  "rectangles": [
+    {
+      "firstCorner": [ 3.0, 1.0, -2.0 ],
+      "secondCorner": [ 5.0, 3.0, -2.0 ],
+      "material": {
+        "type": "DiffuseLight",
+        "color": [ 4.0, 4.0, 4.0 ]
+      }
+    }
+  ]
+}

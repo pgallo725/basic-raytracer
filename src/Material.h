@@ -11,6 +11,9 @@ public:
 
 	virtual ~Material() = default;
 
+	virtual Color Emitted([[maybe_unused]] const Ray& ray_in, [[maybe_unused]] const HitRecord& hit)
+		const noexcept { return Color(0, 0, 0); }
+
 	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered) 
 		const noexcept = 0;
 };
@@ -155,5 +158,30 @@ private:
 		auto r0 = (1 - refraction) / (1 + refraction);
 		r0 = r0 * r0;
 		return r0 + (1 - r0) * pow((1 - cosine), 5);
+	}
+};
+
+
+class DiffuseLight : public Material
+{
+public:
+
+	Color color;
+
+public:
+
+	DiffuseLight(const Color& color) noexcept
+		: color(color) {}
+
+	virtual Color Emitted(const Ray& /*ray_in*/, const HitRecord& /*hit*/)
+		const noexcept override final
+	{
+		return color;
+	}
+
+	virtual bool Scatter(const Ray& /*ray_in*/, const HitRecord& /*hit*/, Color& /*attenuation*/, Ray& /*ray_scattered*/)
+		const noexcept override final
+	{
+		return false;
 	}
 };

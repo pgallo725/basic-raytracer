@@ -107,22 +107,19 @@ private:
 
         HitRecord hit;
 
-        // Intersect the ray against the world geometry.
-        if (scene.Hit(ray, 0.001, Infinity, hit))
-        {
-            Ray scattered;
-            Color attenuation;
+        // Intersect the ray against the world geometry,
+        //  if it hits nothing return the background color.
+        if (!scene.Hit(ray, 0.001, Infinity, hit))
+            return scene.background;
 
-            // Scatter the ray against the surface (based on material properties).
-            if (hit.material->Scatter(ray, hit, attenuation, scattered))
-                return attenuation * RayColor(scattered, scene, bounces - 1);
-            else return Color(0.0, 0.0, 0.0);
-        }
-        else
-        {
-            // A blue-to-white gradient depending on ray Y coordinate as background.
-            const double t = 0.5 * ((ray.direction.y() / ray.direction.Length()) + 1.0);
-            return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
-        }
+        Ray scattered;
+        Color attenuation;
+        Color emitted = hit.material->Emitted(ray, hit);
+
+        // Scatter the ray against the surface (based on material properties).
+        if (!hit.material->Scatter(ray, hit, attenuation, scattered))
+            return emitted;
+
+        return emitted + attenuation * RayColor(scattered, scene, bounces-1);
     }
 };

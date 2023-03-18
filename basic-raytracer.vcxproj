@@ -40,6 +40,7 @@
     <ClInclude Include="src\MovingSphere.h" />
     <ClInclude Include="src\Random.h" />
     <ClInclude Include="src\Ray.h" />
+    <ClInclude Include="src\Rectangle.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\RenderSettings.h" />
     <ClInclude Include="src\RenderThread.h" />
