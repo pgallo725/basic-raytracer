@@ -28,6 +28,10 @@ class SolidTexture : public Texture
 {
 public:
 
+	Color color;
+
+public:
+
 	SolidTexture() = default;
 	SolidTexture(const Color& color) 
 		: color(color) {}
@@ -36,15 +40,17 @@ public:
 
 	virtual Color Sample(const double /*u*/, const double /*v*/, const Point3& /*p*/)
 		const noexcept { return color; }
-
-private:
-
-	Color color;
 };
 
 
 class CheckerTexture : public Texture
 {
+public:
+
+	Color even;
+	Color odd;
+	double scale = 1.0;
+
 public:
 
 	CheckerTexture() = default;
@@ -57,17 +63,17 @@ public:
 		const double sines = std::sin(scale * p.x()) * std::sin(scale * p.y()) * std::sin(scale * p.z());
 		return (sines > 0 ? even : odd);
 	}
-
-private:
-
-	Color even;
-	Color odd;
-	double scale = 1.0;
 };
 
 
 class NoiseTexture : public Texture
 {
+public:
+
+	Perlin perlin;
+	Color  color;
+	double scale = 1.0;
+
 public:
 
 	NoiseTexture() = default;
@@ -80,17 +86,18 @@ public:
 		// The Perlin noise function returns values in [-1, 1], rescale to [0, 1]
 		return color * (perlin.Noise(scale * p) + 1.0) * 0.5;
 	}
-
-private:
-
-	Perlin perlin;
-	Color  color;
-	double scale = 1.0;
 };
 
 
 class MarbleTexture : public Texture
 {
+public:
+
+	Perlin perlin;
+	Color  color;
+	double scale = 1.0;
+	double turbulence = 1.0;
+
 public:
 
 	MarbleTexture() = default;
@@ -104,13 +111,6 @@ public:
 		// the phase (so it shifts x in sin(x)), which makes the strips ondulate.
 		return color * (1.0 + std::sin(scale * p.z() + turbulence * perlin.TurbulentNoise(p))) * 0.5;
 	}
-
-private:
-
-	Perlin perlin;
-	Color  color;
-	double scale = 1.0;
-	double turbulence = 1.0;
 };
 
 
@@ -118,8 +118,16 @@ class ImageTexture : public Texture
 {
 public:
 
+	std::string filename;
+	std::unique_ptr<stbi_uc> data;
+	int width = 0, height = 0;
+	int components = 0;
+
+public:
+
 	ImageTexture() = default;
 	ImageTexture(const std::string& filename)
+		: filename(filename)
 	{
 		data = std::unique_ptr<stbi_uc>(stbi_load(filename.c_str(), &width, &height, &components, 3));
 
@@ -156,10 +164,4 @@ public:
 		const double scale = 1.0 / 255.0;
 		return Color(scale * pixel[0], scale * pixel[1], scale * pixel[2]);
 	}
-
-private:
-
-	std::unique_ptr<stbi_uc> data;
-	int width = 0, height = 0;
-	int components = 0;
 };
