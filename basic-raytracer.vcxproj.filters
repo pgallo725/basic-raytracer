@@ -100,6 +100,9 @@
     <ClInclude Include="src\Instance.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="src\Volume.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="scenes\bouncing_spheres.json">

@@ -8,6 +8,8 @@
 #include "MovingSphere.h"
 #include "Rectangle.h"
 #include "Box.h"
+#include "Instance.h"
+#include "Volume.h"
 #include "Camera.h"
 #include "Scene.h"
 
@@ -161,4 +163,17 @@ void from_json(const json& j, Scene& s)
         s.objects.push_back(rectangle);
     for (const auto& box : boxes)
         s.objects.push_back(box);
+
+#ifdef noact
+    // Custom Cornell Box code
+    std::shared_ptr<Material> white = std::make_shared<LambertianColor>(Color(0.73, 0.73, 0.73));
+    std::shared_ptr<Hittable> box1 = std::make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
+    box1 = std::make_shared<Rotate_Y>(box1, 15);
+    box1 = std::make_shared<Translate>(box1, Vector3(265, 0, 295));
+    s.objects.push_back(std::make_shared<ConstantMedium>(box1, 0.01, Color(0, 0, 0)));
+    std::shared_ptr<Hittable> box2 = std::make_shared<Box>(Point3(0, 0, 0), Point3(165, 165, 165), white);
+    box2 = std::make_shared<Rotate_Y>(box2, -18);
+    box2 = std::make_shared<Translate>(box2, Vector3(130, 0, 65));
+    s.objects.push_back(std::make_shared<ConstantMedium>(box2, 0.01, Color(1, 1, 1)));
+#endif
 }

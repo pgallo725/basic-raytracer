@@ -50,6 +50,7 @@
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Vector3.h" />
+    <ClInclude Include="src\Volume.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="scenes\bouncing_spheres.json" />

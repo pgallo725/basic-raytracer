@@ -185,3 +185,25 @@ public:
 		return false;
 	}
 };
+
+
+class Isotropic : public Material
+{
+public:
+
+	Color color;
+
+public:
+
+	Isotropic(const Color& color) noexcept
+		: color(color) {};
+
+	virtual bool Scatter(const Ray& ray_in, const HitRecord& hit, Color& attenuation, Ray& ray_scattered)
+		const noexcept override final
+	{
+		// An isotropic material's scattering function picks a uniformly random direction
+		ray_scattered = Ray(hit.point, Random::GetVectorInUnitSphere(), ray_in.time);
+		attenuation = color;
+		return true;
+	}
+};
