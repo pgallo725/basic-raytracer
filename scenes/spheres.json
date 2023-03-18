@@ -3986,5 +3986,6 @@
     }
   ],
   "movingSpheres": [],
-  "rectangles": []
+  "rectangles": [],
+  "boxes": []
 }

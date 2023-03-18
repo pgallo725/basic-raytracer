@@ -94,6 +94,12 @@
     <ClInclude Include="src\Rectangle.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="src\Box.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Instance.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="scenes\bouncing_spheres.json">

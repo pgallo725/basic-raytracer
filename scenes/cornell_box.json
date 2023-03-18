@@ -55,11 +55,29 @@
       }
     },
     {
-      "firstCorner": [ 175.0, 554.0, 175.0 ],
-      "secondCorner": [ 380.0, 554.0, 380.0 ],
+      "firstCorner": [ 210.0, 554.0, 220.0 ],
+      "secondCorner": [ 340.0, 554.0, 330.0 ],
       "material": {
         "type": "DiffuseLight",
         "color": [ 15.0, 15.0, 15.0 ]
+      }
+    }
+  ],
+  "boxes": [
+    {
+      "lowerCorner": [ 130.0, 0.0, 65.0 ],
+      "upperCorner": [ 295.0, 165.0, 230.0 ],
+      "material": {
+        "type": "LambertianColor",
+        "albedo": [ 0.73, 0.73, 0.73 ]
+      }
+    },
+    {
+      "lowerCorner": [ 265.0, 0.0, 295.0 ],
+      "upperCorner": [ 430.0, 330.0, 460.0 ],
+      "material": {
+        "type": "LambertianColor",
+        "albedo": [ 0.73, 0.73, 0.73 ]
       }
     }
   ]

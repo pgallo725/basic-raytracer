@@ -7,6 +7,7 @@
 #include "Sphere.h"
 #include "MovingSphere.h"
 #include "Rectangle.h"
+#include "Box.h"
 #include "Camera.h"
 #include "Scene.h"
 
@@ -22,6 +23,7 @@ void from_json(const json&, Camera&);
 void from_json(const json&, std::shared_ptr<Sphere>&);
 void from_json(const json&, std::shared_ptr<MovingSphere>&);
 void from_json(const json&, std::shared_ptr<Rectangle>&);
+void from_json(const json&, std::shared_ptr<Box>&);
 void from_json(const json&, Scene&);
 
 
@@ -131,6 +133,15 @@ void from_json(const json& j, std::shared_ptr<Rectangle>& ms)
 }
 
 
+// Box deserialization
+void from_json(const json& j, std::shared_ptr<Box>& ms)
+{
+    ms = std::make_shared<Box>(j.at("lowerCorner").get<Point3>(),
+                               j.at("upperCorner").get<Point3>(),
+                               j.at("material").get<std::shared_ptr<Material>>());
+}
+
+
 // Scene deserialization
 void from_json(const json& j, Scene& s)
 {
@@ -140,6 +151,7 @@ void from_json(const json& j, Scene& s)
     auto spheres = j.at("spheres").get<std::vector<std::shared_ptr<Sphere>>>();
     auto movingSpheres = j.at("movingSpheres").get<std::vector<std::shared_ptr<MovingSphere>>>();
     auto rectangles = j.at("rectangles").get<std::vector<std::shared_ptr<Rectangle>>>();
+    auto boxes = j.at("boxes").get<std::vector<std::shared_ptr<Box>>>();
 
     for (const auto& sphere : spheres)
         s.objects.push_back(sphere);
@@ -147,4 +159,6 @@ void from_json(const json& j, Scene& s)
         s.objects.push_back(movingSphere);
     for (const auto& rectangle : rectangles)
         s.objects.push_back(rectangle);
+    for (const auto& box : boxes)
+        s.objects.push_back(box);
 }

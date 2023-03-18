@@ -28,12 +28,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AABB.h" />
+    <ClInclude Include="src\Box.h" />
     <ClInclude Include="src\BVH.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\HitRecord.h" />
     <ClInclude Include="src\Hittable.h" />
     <ClInclude Include="src\Image.h" />
+    <ClInclude Include="src\Instance.h" />
     <ClInclude Include="src\JsonDeserializer.h" />
     <ClInclude Include="src\JsonSerializer.h" />
     <ClInclude Include="src\Material.h" />
