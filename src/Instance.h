@@ -55,8 +55,6 @@ public:
 
 	double sin_theta;
 	double cos_theta;
-	bool has_box;
-	AABB bbox;
 	std::shared_ptr<Hittable> object;
 
 public:
@@ -67,35 +65,6 @@ public:
 		const double radians = Deg2Rad(angle);
 		sin_theta = std::sin(radians);
 		cos_theta = std::cos(radians);
-		has_box = object->BoundingBox(0.0, 1.0, bbox);	// TODO: t_start and t_end should be parameterized
-
-		Point3 min( Infinity,  Infinity,  Infinity);
-		Point3 max(-Infinity, -Infinity, -Infinity);
-
-		for (int i = 0; i < 2; i++)
-		{
-			for (int j = 0; j < 2; j++)
-			{
-				for (int k = 0; k < 2; k++)
-				{
-					const double x = i * bbox.max.x() + (1 - i) * bbox.min.x();
-					const double y = j * bbox.max.y() + (1 - j) * bbox.min.y();
-					const double z = k * bbox.max.z() + (1 - k) * bbox.min.z();
-
-					const double newx =  cos_theta * x + sin_theta * z;
-					const double newz = -sin_theta * x + cos_theta * z;
-
-					min[0] = std::min(min[0], newx);
-					min[1] = std::min(min[1], y);
-					min[2] = std::min(min[2], newz);
-					max[0] = std::max(max[0], newx);
-					max[1] = std::max(max[1], y);
-					max[2] = std::max(max[2], newz);
-				}
-			}
-		}
-
-		bbox = AABB(min, max);
 	}
 
 
@@ -134,10 +103,39 @@ public:
 
 
 	// Rotated bounding box.
-	virtual bool BoundingBox(const double /*t_start*/, const double /*t_end*/, AABB& box)
+	virtual bool BoundingBox(const double t_start, const double t_end, AABB& box)
 		const noexcept override final
 	{
-		box = bbox;
-		return has_box;
+		if (!object->BoundingBox(t_start, t_end, box))
+			return false;
+
+		Point3 min( Infinity,  Infinity,  Infinity);
+		Point3 max(-Infinity, -Infinity, -Infinity);
+
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				for (int k = 0; k < 2; k++)
+				{
+					const double x = i * box.max.x() + (1 - i) * box.min.x();
+					const double y = j * box.max.y() + (1 - j) * box.min.y();
+					const double z = k * box.max.z() + (1 - k) * box.min.z();
+
+					const double newx =  cos_theta * x + sin_theta * z;
+					const double newz = -sin_theta * x + cos_theta * z;
+
+					min[0] = std::min(min[0], newx);
+					min[1] = std::min(min[1], y);
+					min[2] = std::min(min[2], newz);
+					max[0] = std::max(max[0], newx);
+					max[1] = std::max(max[1], y);
+					max[2] = std::max(max[2], newz);
+				}
+			}
+		}
+
+		box = AABB(min, max);
+		return true;
 	}
 };
