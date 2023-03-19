@@ -111,5 +111,20 @@
     <None Include="scenes\spheres.json">
       <Filter>File di risorse</Filter>
     </None>
+    <None Include="scenes\bouncing_spheres_texture.json">
+      <Filter>File di risorse</Filter>
+    </None>
+    <None Include="scenes\cornell_box.json">
+      <Filter>File di risorse</Filter>
+    </None>
+    <None Include="scenes\cornell_box_smoke.json">
+      <Filter>File di risorse</Filter>
+    </None>
+    <None Include="scenes\earth.json">
+      <Filter>File di risorse</Filter>
+    </None>
+    <None Include="scenes\light.json">
+      <Filter>File di risorse</Filter>
+    </None>
   </ItemGroup>
 </Project>

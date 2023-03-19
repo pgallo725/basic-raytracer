@@ -11,8 +11,9 @@
     "timeShutterOpen": 0.0,
     "timeShutterClose": 1.0
   },
-  "spheres": [
+  "objects": [
     {
+      "type": "Sphere",
       "center": [ 0.0, 0.0, 0.0 ],
       "radius": 2.0,
       "material": {
@@ -23,8 +24,5 @@
         }
       }
     }
-  ],
-  "movingSpheres": [],
-  "rectangles": [],
-  "boxes": []
+  ]
 }

@@ -11,70 +11,78 @@
     "timeShutterOpen": 0.0,
     "timeShutterClose": 1.0
   },
-  "spheres": [],
-  "movingSpheres": [],
-  "rectangles": [
+  "objects": [ 
     {
-      "firstCorner": [ 555.0, 0.0, 0.0 ],
-      "secondCorner": [ 555.0, 555.0, 555.0 ],
+      "type": "Rectangle",
+      "lowerCorner": [ 555.0, 0.0, 0.0 ],
+      "upperCorner": [ 555.0, 555.0, 555.0 ],
       "material": {
         "type": "LambertianColor",
         "albedo": [ 0.12, 0.45, 0.15 ]
       }
     },
     {
-      "firstCorner": [ 0.0, 0.0, 0.0 ],
-      "secondCorner": [ 0.0, 555.0, 555.0 ],
+      "type": "Rectangle",
+      "lowerCorner": [ 0.0, 0.0, 0.0 ],
+      "upperCorner": [ 0.0, 555.0, 555.0 ],
       "material": {
         "type": "LambertianColor",
         "albedo": [ 0.65, 0.05, 0.05 ]
       }
     },
     {
-      "firstCorner": [ 0.0, 0.0, 0.0 ],
-      "secondCorner": [ 555.0, 0.0, 555.0 ],
+      "type": "Rectangle",
+      "lowerCorner": [ 0.0, 0.0, 0.0 ],
+      "upperCorner": [ 555.0, 0.0, 555.0 ],
       "material": {
         "type": "LambertianColor",
         "albedo": [ 0.73, 0.73, 0.73 ]
       }
     },
     {
-      "firstCorner": [ 0.0, 555.0, 0.0 ],
-      "secondCorner": [ 555.0, 555.0, 555.0 ],
+      "type": "Rectangle",
+      "lowerCorner": [ 0.0, 555.0, 0.0 ],
+      "upperCorner": [ 555.0, 555.0, 555.0 ],
       "material": {
         "type": "LambertianColor",
         "albedo": [ 0.73, 0.73, 0.73 ]
       }
     },
     {
-      "firstCorner": [ 0.0, 0.0, 555.0 ],
-      "secondCorner": [ 555.0, 555.0, 555.0 ],
+      "type": "Rectangle",
+      "lowerCorner": [ 0.0, 0.0, 555.0 ],
+      "upperCorner": [ 555.0, 555.0, 555.0 ],
       "material": {
         "type": "LambertianColor",
         "albedo": [ 0.73, 0.73, 0.73 ]
       }
     },
     {
-      "firstCorner": [ 210.0, 554.0, 220.0 ],
-      "secondCorner": [ 340.0, 554.0, 330.0 ],
+      "type": "Rectangle",
+      "lowerCorner": [ 210.0, 554.0, 220.0 ],
+      "upperCorner": [ 340.0, 554.0, 330.0 ],
       "material": {
         "type": "DiffuseLight",
         "color": [ 15.0, 15.0, 15.0 ]
       }
-    }
-  ],
-  "boxes": [
+    },
     {
-      "lowerCorner": [ 130.0, 0.0, 65.0 ],
-      "upperCorner": [ 295.0, 165.0, 230.0 ],
+      "type": "Box",
+      "lowerCorner": [ 0.0, 0.0, 0.0 ],
+      "upperCorner": [ 165.0, 165.0, 165.0 ],
+      "translate": [ 130.0, 0.0, 65.0 ],
+      "rotate_y": -18.0,
       "material": {
         "type": "LambertianColor",
         "albedo": [ 0.73, 0.73, 0.73 ]
       }
     },
     {
-      "lowerCorner": [ 265.0, 0.0, 295.0 ],
-      "upperCorner": [ 430.0, 330.0, 460.0 ],
+      "type": "Box",
+      "lowerCorner": [ 0.0, 0.0, 0.0 ],
+      "upperCorner": [ 165.0, 330.0, 165.0 ],
+      "translate": [ 265.0, 0.0, 295.0 ],
+      "rotate_y": 15.0,
       "material": {
         "type": "LambertianColor",
         "albedo": [ 0.73, 0.73, 0.73 ]

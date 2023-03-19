@@ -11,8 +11,9 @@
     "timeShutterOpen": 0.0,
     "timeShutterClose": 1.0
   },
-  "spheres": [
+  "objects": [
     {
+      "type": "Sphere",
       "center": [ 0.0, -1000.0, 0.0 ],
       "radius": 1000.0,
       "material": {
@@ -26,6 +27,7 @@
       }
     },
     {
+      "type": "Sphere",
       "center": [ 0.0, 2.0, 0.0 ],
       "radius": 2.0,
       "material": {
@@ -37,18 +39,15 @@
           "turbulence": 10.0
         }
       }
-    }
-  ],
-  "movingSpheres": [],
-  "rectangles": [
+    },
     {
-      "firstCorner": [ 3.0, 1.0, -2.0 ],
-      "secondCorner": [ 5.0, 3.0, -2.0 ],
+      "type": "Rectangle",
+      "lowerCorner": [ 3.0, 1.0, -2.0 ],
+      "upperCorner": [ 5.0, 3.0, -2.0 ],
       "material": {
         "type": "DiffuseLight",
         "color": [ 4.0, 4.0, 4.0 ]
       }
     }
-  ],
-  "boxes": []
+  ]
 }
