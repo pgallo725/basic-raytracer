@@ -20,7 +20,7 @@ int main(int argc, const char** argv)
         settings.ParseCommandLine(argc, argv);
         settings.Print();
     }
-    catch (std::exception e)
+    catch (const std::exception& e)
     {
         std::cerr << "ERROR: " << e.what() << '\n' 
             << "Usage: " << argv[0] << " <scene> <output> <width> <height> "                    // Required parameters
@@ -32,7 +32,16 @@ int main(int argc, const char** argv)
 
     // LOAD SCENE
 
-    Scene scene = JsonDeserializer::LoadScene(settings.ScenePath());
+    Scene scene;
+    try
+    {
+        scene = JsonDeserializer::LoadScene(settings.ScenePath());
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "ERROR: " << e.what() << "\n";
+        return -1;
+    }
 
     // BUILD BVH STRUCTURE
 
@@ -42,14 +51,21 @@ int main(int argc, const char** argv)
 
     const auto start_time = std::chrono::steady_clock::now();
 
-    Image image(settings.OutputPath(), settings.ImageWidth(), settings.ImageHeight());
+    Image image(settings.ImageWidth(), settings.ImageHeight());
 
-    const Renderer renderer(scene, settings);
-    renderer.Render(image);
+    Renderer::Render(scene, image, settings);
 
     // FINISH
 
-    image.Close();
+    try
+    {
+        image.WriteToDisk(settings.OutputPath());
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "ERROR: " << e.what() << "\n";
+        return -1;
+    }
 
     const auto end_time = std::chrono::steady_clock::now();
     const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
