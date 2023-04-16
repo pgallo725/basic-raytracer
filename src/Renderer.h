@@ -1,5 +1,7 @@
 #pragma once
 
+#include <thread>
+
 #include "Common.h"
 #include "Scene.h"
 #include "Image.h"
@@ -133,10 +135,11 @@ public:
                 scene, image, settings.SamplesPerPixel(), settings.MaxBounces(), counter));
         }
 
-        // Update the scanline counter in the command line UI by observing the atomic counter.
+        // Update the scanline counter in the command line UI.
         uint32_t value = 0;
         while (value < image.GetHeight())
         {
+            // Wait on the atomic counter to be updated by worker threads.
             counter.wait(value);
             value = counter.load();
 
