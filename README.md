@@ -1,17 +1,19 @@
 # Basic Raytracer
 
-A simple CPU raytracer implementation based on the excellent *"Ray Tracing in One Weekend"* book by Peter Shirley ([no seriously, you should read it](https://raytracing.github.io/books/RayTracingInOneWeekend.html)).
+<p float="left">
+  <img src="/images/render_book_1.png" width="600" />
+  <img src="/images/render_book_2.png" width="400" /> 
+</p>
 
-After completing the book, I have expanded the software with the following features:
+A simple CPU raytracer implementation based on the excellent *"Ray Tracing in One Weekend"* and *"Ray Tracing: The Next Week"* books by Peter Shirley ([no seriously, you should read them](https://raytracing.github.io)).
+
+After completing the books, I have expanded the software with the following features:
 * **Multithreading** support (scalable to an unlimited number of threads)
 * JSON-based **scene files**, instead of code-generated scenes
 * A **command-line interface** to provide some configurable parameters to the renderer
 * Display render progress and total time to complete
 * **PPM P6** binary encoding for more compact render outputs (instead of plain P3 ASCII encoding)
 * Sprinkled `const`, `noexcept` and `final` all throughout the code, to make the smart C++ people happy
-
-
-![Rendered image](/images/render.png)
 
 ## How to run
 
