@@ -1,8 +1,8 @@
 # Basic Raytracer
 
 <p float="left">
-  <img src="/images/render_book_1.png" width="600" />
-  <img src="/images/render_book_2.png" width="400" /> 
+  <img src="/images/render_book_1.png" width="450" />
+  <img src="/images/render_book_2.png" width="300" /> 
 </p>
 
 A simple CPU raytracer implementation based on the excellent *"Ray Tracing in One Weekend"* and *"Ray Tracing: The Next Week"* books by Peter Shirley ([no seriously, you should read them](https://raytracing.github.io)).
