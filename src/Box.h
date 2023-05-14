@@ -29,6 +29,7 @@ public:
 	}
 
 
+	// Ray-Box (axis aligned) intersection checking.
 	virtual bool Hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit)
 		const noexcept override final
 	{

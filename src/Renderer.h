@@ -73,7 +73,7 @@ private:
                 for (uint32_t s = 0; s < m_samples; s++)
                 {
                     const double u = (i + Random::GetDouble(0.0, 1.0)) / ((double)ref_image.GetWidth() - 1);
-                    const double v = 1.0 - (j + Random::GetDouble(0.0, 1.0)) / ((double)ref_image.GetHeight() - 1);
+                    const double v = 1.0 - (j + Random::GetDouble(0.0, 1.0)) / ((double)ref_image.GetHeight() - 1);  // flip image vertically
 
                     pixel += RayColor(ref_scene.camera.GetRay(u, v), ref_scene, m_bounces);
                 }

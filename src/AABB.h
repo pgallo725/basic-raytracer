@@ -17,6 +17,7 @@ public:
 		: min(min), max(max)
 	{}
 
+    // Ray-AABB (axis aligned bounding box) intersection checking.
     inline bool Hit(const Ray& ray, double t_min, double t_max) const noexcept
     {
         for (int a = 0; a < 3; a++)

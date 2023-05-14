@@ -27,7 +27,14 @@ public:
 	virtual bool Hit(const Ray& ray, const double t_min, const double t_max, HitRecord& hit)
 		const noexcept override final
 	{
-		// TODO: documentation
+		// A ray passing through a volume of constant density can either scatter inside
+		// the volume or make it all the way through. The denser the volume, the more
+		// likely it is for the ray to be scattered; the probability of the ray scattering
+		// over a small distance is P = C * dL, where C is proportional to the optical
+		// density of the volume.
+		// The code below (given a random number) calculates the distance at which the 
+		// scattering of a ray would occur: if that distance is inside the volume boundary
+		// it's a hit, otherwise means that there is no "hit".
 
 		HitRecord hit1, hit2;
 
@@ -46,7 +53,12 @@ public:
 		if (hit1.t < 0.0)
 			hit1.t = 0.0;
 
-		const double ray_length = ray.direction.Length();
+		// NOTE: compared to Peter Shirley's book, the value of volume density for my
+		//  raytracer seems to have double the effect, e.g. a value of 0.01 in my code
+		//  will produce a medium that is twice as dense as what's shown in the book.
+		// I've investigated the issue but couldn't really find it's cause, therefore
+		//  as a whacky workaround I just divide the ray length by 2.0 to compensate.
+		const double ray_length = ray.direction.Length() / 2.0;
 		const double distance_inside_boundary = (hit2.t - hit1.t) * ray_length;
 		const double hit_distance = neg_inv_density * std::log(Random::GetDouble(0.0, 1.0));
 

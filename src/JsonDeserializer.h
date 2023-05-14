@@ -32,19 +32,12 @@ public:
 
     static Scene LoadScene(const std::string& filename)
     {
-        try
-        {
-            std::ifstream file(filename);
-            json json_data;
-            file >> json_data;
-            file.close();
+        std::ifstream file(filename);
+        json json_data;
+        file >> json_data;
+        file.close();
 
-            return json_data.get<Scene>();
-        }
-        catch (const std::exception& e)
-        {
-            std::cerr << "ERROR: " << e.what() << "\n";
-        }
+        return json_data.get<Scene>();
     }
 };
 
