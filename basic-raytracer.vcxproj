@@ -37,7 +37,6 @@
     <ClInclude Include="src\Image.h" />
     <ClInclude Include="src\Instance.h" />
     <ClInclude Include="src\JsonDeserializer.h" />
-    <ClInclude Include="src\JsonSerializer.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\MovingSphere.h" />
     <ClInclude Include="src\Random.h" />
@@ -45,7 +44,6 @@
     <ClInclude Include="src\Rectangle.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\RenderSettings.h" />
-    <ClInclude Include="src\RenderThread.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Texture.h" />
