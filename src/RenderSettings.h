@@ -17,7 +17,7 @@ private:
     uint32_t        m_samplesPerPixel = 500;
     uint32_t        m_maxBounces = 50;
     uint32_t        m_threadCount = 4;
-    double          m_aspectRatio = 16.0 / 9.0;
+    float           m_aspectRatio = 16.0 / 9.0;
 
 public:
 
@@ -28,7 +28,7 @@ public:
     uint32_t      SamplesPerPixel()  const noexcept { return m_samplesPerPixel; }
     uint32_t      MaxBounces()       const noexcept { return m_maxBounces; }
     uint32_t      ThreadCount()      const noexcept { return m_threadCount; }
-    double        AspectRatio()      const noexcept { return m_aspectRatio; }
+    float         AspectRatio()      const noexcept { return m_aspectRatio; }
 
 
     static RenderSettings& Get() noexcept
@@ -48,7 +48,7 @@ public:
         m_imageWidth = ReadUInt32Param(argv, 3, "width");
         m_imageHeight = ReadUInt32Param(argv, 4, "height");
 
-        m_aspectRatio = double(m_imageWidth) / double(m_imageHeight);
+        m_aspectRatio = float(m_imageWidth) / float(m_imageHeight);
 
         int index = 5;
         while (index < argc)

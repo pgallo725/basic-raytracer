@@ -18,13 +18,13 @@ public:
 	{}
 
     // Ray-AABB (axis aligned bounding box) intersection checking.
-    inline bool Hit(const Ray& ray, double t_min, double t_max) const noexcept
+    inline bool Hit(const Ray& ray, float t_min, float t_max) const noexcept
     {
         for (int a = 0; a < 3; a++)
         {
-            double invD = 1.0 / ray.direction[a];
-            double t0 = (min[a] - ray.origin[a]) * invD;
-            double t1 = (max[a] - ray.origin[a]) * invD;
+            float invD = 1.0 / ray.direction[a];
+            float t0 = (min[a] - ray.origin[a]) * invD;
+            float t1 = (max[a] - ray.origin[a]) * invD;
             if (invD < 0.0)
                 std::swap(t0, t1);
             t_min = std::max(t0, t_min);

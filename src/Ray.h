@@ -6,14 +6,14 @@ struct Ray
 {
 	Point3 origin;
 	Vector3 direction;
-	double time = 0.0;
+	float time = 0.0;
 
 	Ray() = default;
-	Ray(const Point3& origin, const Vector3& direction, double time)
+	Ray(const Point3& origin, const Vector3& direction, float time)
 		: origin(origin), direction(direction), time(time)
 	{}
 
-	Point3 At(const double t) const noexcept
+	Point3 At(const float t) const noexcept
 	{
 		// P(t) = A + t * b
 		return origin + t * direction;

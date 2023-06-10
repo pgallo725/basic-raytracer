@@ -13,8 +13,8 @@ private:
 	Vector3 m_horizontal;
 	Vector3 m_vertical;
     Vector3 m_view, m_viewRight, m_viewUp;
-    double m_lensRadius;
-    double m_timeStart, m_timeEnd;      // Shutter open/close times
+    float m_lensRadius;
+    float m_timeStart, m_timeEnd;      // Shutter open/close times
 
 public:
 
@@ -23,15 +23,15 @@ public:
 	Camera(const Point3& look_from,
         const Point3& look_at, 
         const Vector3& world_up,
-        const double v_fov,        // Vertical field-of-view (in degrees)
-        const double aperture,
-        const double focus_distance,
-        const double time_start,
-        const double time_end)
+        const float v_fov,        // Vertical field-of-view (in degrees)
+        const float aperture,
+        const float focus_distance,
+        const float time_start,
+        const float time_end)
 	{
         // The height of the viewport can be calculated from the FOV with simple trigonometry.
-        const double theta = Deg2Rad(v_fov);
-        const double h = std::tan(theta / 2.0);
+        const float theta = Deg2Rad(v_fov);
+        const float h = std::tan(theta / 2.0);
 
         // Viewport vertical coordinates span from -tan(theta/2) (bottom) to tan(theta/2) (top), 
         // while the horizontal coordinates are still symmetrical -X (left) to X (right) but the
@@ -39,8 +39,8 @@ public:
 
         const RenderSettings& settings = RenderSettings::Get();
 
-        const double viewport_height = 2.0 * h;
-        const double viewport_width = settings.AspectRatio() * viewport_height;
+        const float viewport_height = 2.0 * h;
+        const float viewport_width = settings.AspectRatio() * viewport_height;
 
         // Derive a view direction from the 2 points look_from and look_at
         m_view = Vector3::Normalized(look_from - look_at);
@@ -63,10 +63,10 @@ public:
         m_timeEnd = time_end;
 	}
 
-    double GetTimeShutterOpen()  const noexcept { return m_timeStart; }
-    double GetTimeShutterClose() const noexcept { return m_timeEnd;   }
+    float GetTimeShutterOpen()  const noexcept { return m_timeStart; }
+    float GetTimeShutterClose() const noexcept { return m_timeEnd;   }
 
-    Ray GetRay(const double s, const double t) const noexcept
+    Ray GetRay(const float s, const float t) const noexcept
     {
         // In order to accomplish defocus blur, generate random scene rays
         // originating from inside a disk centered at the look_from point. 
@@ -76,7 +76,7 @@ public:
         return Ray(
             m_origin + offset,
             m_lowerLeftCorner + s * m_horizontal + t * m_vertical - (m_origin + offset),
-            Random::GetDouble(m_timeStart, m_timeEnd)
+            Random::GetFloat(m_timeStart, m_timeEnd)
         );
     }
 };

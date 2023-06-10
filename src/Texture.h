@@ -20,7 +20,7 @@ public:
 
 	virtual ~Texture() = default;
 
-	virtual Color Sample(const double u, const double v, const Point3& p) const noexcept = 0;
+	virtual Color Sample(const float u, const float v, const Point3& p) const noexcept = 0;
 };
 
 
@@ -35,10 +35,10 @@ public:
 	SolidTexture() = default;
 	SolidTexture(const Color& color) 
 		: color(color) {}
-	SolidTexture(const double r, const double g, const double b) 
+	SolidTexture(const float r, const float g, const float b) 
 		: color({ r, g, b }) {}
 
-	virtual Color Sample(const double /*u*/, const double /*v*/, const Point3& /*p*/)
+	virtual Color Sample(const float /*u*/, const float /*v*/, const Point3& /*p*/)
 		const noexcept { return color; }
 };
 
@@ -49,18 +49,18 @@ public:
 
 	Color even;
 	Color odd;
-	double scale = 1.0;
+	float scale = 1.0;
 
 public:
 
 	CheckerTexture() = default;
-	CheckerTexture(const Color& even, const Color& odd, const double scale)
+	CheckerTexture(const Color& even, const Color& odd, const float scale)
 		: even(even), odd(odd), scale(scale) {}
 
-	virtual Color Sample(const double /*u*/, const double /*v*/, const Point3& p)
+	virtual Color Sample(const float /*u*/, const float /*v*/, const Point3& p)
 		const noexcept
 	{
-		const double sines = std::sin(scale * p.x()) * std::sin(scale * p.y()) * std::sin(scale * p.z());
+		const float sines = std::sin(scale * p.x()) * std::sin(scale * p.y()) * std::sin(scale * p.z());
 		return (sines > 0 ? even : odd);
 	}
 };
@@ -72,15 +72,15 @@ public:
 
 	Perlin perlin;
 	Color  color;
-	double scale = 1.0;
+	float  scale = 1.0;
 
 public:
 
 	NoiseTexture() = default;
-	NoiseTexture(const Color& color, double scale)
+	NoiseTexture(const Color& color, float scale)
 		: color(color), scale(scale) {}
 
-	virtual Color Sample(const double /*u*/, const double /*v*/, const Point3& p)
+	virtual Color Sample(const float /*u*/, const float /*v*/, const Point3& p)
 		const noexcept
 	{
 		// The Perlin noise function returns values in [-1, 1], rescale to [0, 1]
@@ -95,16 +95,16 @@ public:
 
 	Perlin perlin;
 	Color  color;
-	double scale = 1.0;
-	double turbulence = 1.0;
+	float  scale = 1.0;
+	float  turbulence = 1.0;
 
 public:
 
 	MarbleTexture() = default;
-	MarbleTexture(const Color& color, double scale, double turbulence)
+	MarbleTexture(const Color& color, float scale, float turbulence)
 		: color(color), scale(scale), turbulence(turbulence) {}
 
-	virtual Color Sample(const double /*u*/, const double /*v*/, const Point3& p)
+	virtual Color Sample(const float /*u*/, const float /*v*/, const Point3& p)
 		const noexcept
 	{
 		// Make the color proportional to a sine function, but use turbulence to adjust
@@ -138,7 +138,7 @@ public:
 		}
 	}
 
-	virtual Color Sample(const double u, const double v, const Point3& /*p*/)
+	virtual Color Sample(const float u, const float v, const Point3& /*p*/)
 		const noexcept
 	{
 		// If we have no texture data, then return solid pink as a debugging aid.
@@ -146,22 +146,22 @@ public:
 			return Color(1, 0, 1);
 
 		// Clamp input texture coordinates to [0,1] x [1,0]
-		double uu = Clamp(u, 0.0, 1.0);
-		double vv = 1.0 - Clamp(v, 0.0, 1.0);  // Flip V to image coordinates
+		float uu = Clamp(u, 0.0, 1.0);
+		float vv = 1.0 - Clamp(v, 0.0, 1.0);  // Flip V to image coordinates
 
-		int i = static_cast<int>(uu * width);
-		int j = static_cast<int>(vv * height);
+		size_t i = static_cast<size_t>(uu * width);
+		size_t j = static_cast<size_t>(vv * height);
 
 		// Clamp integer mapping, since actual coordinates should be less than 1.0
 		if (i >= width)  i = width - 1;
 		if (j >= height) j = height - 1;
 
-		const int bytes_pixel = components;
-		const int bytes_scanline = width * bytes_pixel;
+		const size_t bytes_pixel = components;
+		const size_t bytes_scanline = width * bytes_pixel;
 
 		const stbi_uc* pixel = data.get() + j * bytes_scanline + i * bytes_pixel;
 
-		const double scale = 1.0 / 255.0;
+		const float scale = 1.0 / 255.0;
 		return Color(scale * pixel[0], scale * pixel[1], scale * pixel[2]);
 	}
 };

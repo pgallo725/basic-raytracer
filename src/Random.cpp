@@ -14,8 +14,14 @@ void Random::SeedCurrentThread(const unsigned long long seed) noexcept
 
 int Random::GetInteger(const int min, const int max) noexcept
 {
-	std::uniform_real_distribution<double> distribution(min, max+1);
+	std::uniform_real_distribution<float> distribution(min, max+1);
 	return static_cast<int>(distribution(m_generator));
+}
+
+float Random::GetFloat(const float min, const float max) noexcept
+{
+	std::uniform_real_distribution<float> distribution(min, max);
+	return distribution(m_generator);
 }
 
 double Random::GetDouble(const double min, const double max) noexcept
@@ -24,14 +30,14 @@ double Random::GetDouble(const double min, const double max) noexcept
 	return distribution(m_generator);
 }
 
-Vector3 Random::GetVector(const double min, const double max) noexcept
+Vector3 Random::GetVector(const float min, const float max) noexcept
 {
-	return Vector3(Random::GetDouble(min, max),
-		Random::GetDouble(min, max),
-		Random::GetDouble(min, max));
+	return Vector3(Random::GetFloat(min, max),
+		Random::GetFloat(min, max),
+		Random::GetFloat(min, max));
 }
 
-Color Random::GetColor(const double min, const double max) noexcept
+Color Random::GetColor(const float min, const float max) noexcept
 {
 	return Random::GetVector(Clamp(min, 0.0, 1.0), Clamp(max, 0.0, 1.0));
 }
@@ -66,7 +72,7 @@ Vector3 Random::GetVectorInUnitDisk() noexcept
 {
 	while (true)
 	{
-		const Vector3 vec = Vector3(Random::GetDouble(-1, 1), Random::GetDouble(-1, 1), 0);
+		const Vector3 vec = Vector3(Random::GetFloat(-1, 1), Random::GetFloat(-1, 1), 0);
 		if (vec.SqrLength() >= 1.0) continue;
 		return vec;
 	}
@@ -92,7 +98,7 @@ Perlin::~Perlin()
 	delete[] m_permutationZ;
 }
 
-double Perlin::Noise(const Point3& p) const noexcept
+float Perlin::Noise(const Point3& p) const noexcept
 {
 	const int x = static_cast<int>(std::floor(p.x()));
 	const int y = static_cast<int>(std::floor(p.y()));
@@ -109,17 +115,17 @@ double Perlin::Noise(const Point3& p) const noexcept
 	c[0][1][1] = GatherRandomSample(x,   y+1, z+1);
 	c[1][1][1] = GatherRandomSample(x+1, y+1, z+1);
 
-	const double u = p.x() - std::floor(p.x());
-	const double v = p.y() - std::floor(p.y());
-	const double w = p.z() - std::floor(p.z());
+	const float u = p.x() - std::floor(p.x());
+	const float v = p.y() - std::floor(p.y());
+	const float w = p.z() - std::floor(p.z());
 
 	// Use Hermite cubic function to smooth the interpolation factors
-	const double uu = u * u * (3.0 - 2.0 * u);
-	const double vv = v * v * (3.0 - 2.0 * v);
-	const double ww = w * w * (3.0 - 2.0 * w);
+	const float uu = u * u * (3.0 - 2.0 * u);
+	const float vv = v * v * (3.0 - 2.0 * v);
+	const float ww = w * w * (3.0 - 2.0 * w);
 
 	// Trilinearly interpolate 8 noise samples to smooth out the result
-	double result = 0.0;
+	float result = 0.0;
 	for (int i = 0; i < 2; ++i)
 		for (int j = 0; j < 2; ++j)
 			for (int k = 0; k < 2; ++k)
@@ -133,11 +139,11 @@ double Perlin::Noise(const Point3& p) const noexcept
 	return result;
 }
 
-double Perlin::TurbulentNoise(const Point3& p, int depth) const noexcept
+float Perlin::TurbulentNoise(const Point3& p, int depth) const noexcept
 {
-	double result = 0.0;
-	double scale = 1.0;
-	double weight = 1.0;
+	float result = 0.0;
+	float scale = 1.0;
+	float weight = 1.0;
 
 	for (int i = 0; i < depth; ++i)
 	{

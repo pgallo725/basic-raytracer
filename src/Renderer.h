@@ -72,8 +72,8 @@ private:
                 // Gather multiple samples per pixel, and accumulate them.
                 for (uint32_t s = 0; s < m_samples; s++)
                 {
-                    const double u = (i + Random::GetDouble(0.0, 1.0)) / ((double)ref_image.GetWidth() - 1);
-                    const double v = 1.0 - (j + Random::GetDouble(0.0, 1.0)) / ((double)ref_image.GetHeight() - 1);  // flip image vertically
+                    const float u = (i + Random::GetFloat(0.0, 1.0)) / ((float)ref_image.GetWidth() - 1);
+                    const float v = 1.0 - (j + Random::GetFloat(0.0, 1.0)) / ((float)ref_image.GetHeight() - 1);  // flip image vertically
 
                     pixel += RayColor(ref_scene.camera.GetRay(u, v), ref_scene, m_bounces);
                 }
@@ -92,19 +92,22 @@ private:
         if (bounces == 0)
             return Color(0.0, 0.0, 0.0);
 
-        HitRecord hit;
-
         // Intersect the ray against the world geometry,
         //  if it hits nothing return the background color.
-        if (!scene.Hit(ray, 0.001, Infinity, hit))
+        HitRecord hit;
+        if (!scene.Intersect(ray, 0.001, Infinity, hit))
             return scene.background;
 
-        Ray   scattered;
-        Color attenuation;
-        Color emitted = hit.material->Emitted(ray, hit);
+        // Evaluate surface and material properties on the intersection point.
+        scene.objects[hit.object_id].Evaluate(ray, hit);
+
+        // Gather emission color from the surface.
+        Color emitted = scene.materials[hit.material_id].Emitted(ray, hit);
 
         // Scatter the ray against the surface (based on material properties).
-        if (!hit.material->Scatter(ray, hit, attenuation, scattered))
+        Ray   scattered;
+        Color attenuation;
+        if (!scene.materials[hit.material_id].Scatter(ray, hit, attenuation, scattered))
             return emitted;
 
         // Terminate recursion if the energy of the ray drops to almost zero.

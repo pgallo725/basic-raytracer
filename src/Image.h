@@ -41,9 +41,9 @@ public:
 	void SetPixel(const uint32_t x, const uint32_t y, const Color& pixel) noexcept
 	{
 		// Gamma-correct the color values for gamma=2.0.
-		const double r = std::sqrt(pixel.x());
-		const double g = std::sqrt(pixel.y());
-		const double b = std::sqrt(pixel.z());
+		const float r = std::sqrt(pixel.x());
+		const float g = std::sqrt(pixel.y());
+		const float b = std::sqrt(pixel.z());
 
 		// Compute the index of the pixel in the array.
 		const uint64_t i = (uint64_t(y) * m_width + uint64_t(x)) * 3;

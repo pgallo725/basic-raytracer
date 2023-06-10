@@ -16,9 +16,10 @@ public:
 	static void SeedCurrentThread(const unsigned long long seed) noexcept;
 
 	static int     GetInteger(const int min, const int max) noexcept;
+	static float   GetFloat(const float min, const float max) noexcept;
 	static double  GetDouble(const double min, const double max) noexcept;
-	static Vector3 GetVector(const double min, const double max) noexcept;
-	static Color   GetColor(const double min = 0.0, const double max = 1.0) noexcept;
+	static Vector3 GetVector(const float min, const float max) noexcept;
+	static Color   GetColor(const float min = 0.0, const float max = 1.0) noexcept;
 	
 	static Vector3 GetUnitVector() noexcept;
 	static Vector3 GetVectorInUnitSphere() noexcept;
@@ -34,8 +35,8 @@ public:
 	Perlin();
 	~Perlin();
 	
-	double Noise(const Point3& p) const noexcept;
-	double TurbulentNoise(const Point3& p, int depth=7) const noexcept;
+	float Noise(const Point3& p) const noexcept;
+	float TurbulentNoise(const Point3& p, int depth=7) const noexcept;
 
 private:
 

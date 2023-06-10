@@ -56,9 +56,6 @@
     <ClInclude Include="src\Scene.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sphere.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="src\Vector3.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
@@ -68,28 +65,13 @@
     <ClInclude Include="src\HitRecord.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\MovingSphere.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="src\AABB.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BVH.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\Texture.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rectangle.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Box.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Instance.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Volume.h">
+    <ClInclude Include="src\Buffer.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
