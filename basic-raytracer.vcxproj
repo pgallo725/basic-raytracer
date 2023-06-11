@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="images\render.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Vector3.cpp" />
@@ -56,8 +53,13 @@
     <None Include="scenes\cornell_box.json" />
     <None Include="scenes\cornell_box_smoke.json" />
     <None Include="scenes\earth.json" />
+    <None Include="scenes\final_scene.json" />
     <None Include="scenes\light.json" />
     <None Include="scenes\spheres.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\render_book_1.png" />
+    <Image Include="images\render_book_2.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
