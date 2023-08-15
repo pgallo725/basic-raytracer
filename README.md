@@ -13,8 +13,7 @@ After completing the books, I have expanded the software with the following feat
 * A **command-line interface** to provide some configurable parameters to the renderer
 * Display render progress and total time to complete
 * **PPM P6** binary encoding for more compact render outputs (instead of plain P3 ASCII encoding)
-* A **data-oriented** rewrite of the raytracer, with additional optimizations, which is available on the `data-oriented` branch.  
-This version runs *~10% faster* than the original version from the book.
+* A **data-oriented** rewrite of the raytracer, with additional optimizations, which is available on the `data-oriented` branch. This version runs *~10% faster* than the original version from the book.
 
 ## How to run
 
