@@ -53,12 +53,7 @@ public:
 		if (hit1.t < 0.0)
 			hit1.t = 0.0;
 
-		// NOTE: compared to Peter Shirley's book, the value of volume density for my
-		//  raytracer seems to have double the effect, e.g. a value of 0.01 in my code
-		//  will produce a medium that is twice as dense as what's shown in the book.
-		// I've investigated the issue but couldn't really find it's cause, therefore
-		//  as a whacky workaround I just divide the ray length by 2.0 to compensate.
-		const double ray_length = ray.direction.Length() / 2.0;
+		const double ray_length = ray.direction.Length();
 		const double distance_inside_boundary = (hit2.t - hit1.t) * ray_length;
 		const double hit_distance = neg_inv_density * std::log(Random::GetDouble(0.0, 1.0));
 

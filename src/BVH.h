@@ -27,6 +27,11 @@ public:
 		{
 			left = right = objects[0];
 		}
+		else if (objects.size() == 2)
+		{
+			left = objects[0];
+			right = objects[1];
+		}
 		else
 		{
 			int axis = Random::GetInteger(0, 2);
